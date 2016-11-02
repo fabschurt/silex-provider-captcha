@@ -24,6 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class CaptchaServiceProviderTest extends WebTestCase
 {
+    public function testServiceIsRegistered()
+    {
+        verify($this->app)->hasKey('captcha');
+    }
+
     public function testDefaultRouteServesImage()
     {
         $this->client->request(Request::METHOD_GET, '/captcha');
