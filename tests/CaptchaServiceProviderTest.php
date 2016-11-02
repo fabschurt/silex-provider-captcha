@@ -43,7 +43,11 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testFormWidgetOutput()
     {
-        $captchaFormRow = (new Crawler($this->buildFormHtml()))->filter('#form > div')->eq(0);
+        echo $this->buildFormHtml();
+        $captchaFormRow = (new Crawler($this->buildFormHtml()))
+            ->filter("#{$this->getTestFormName()} > div")
+            ->eq(0)
+        ;
         verify(
             $captchaFormRow
                 ->filter(
@@ -71,7 +75,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
         $app->register(new Provider\TranslationServiceProvider());
         $app->register(new Provider\TwigServiceProvider(), [
             'twig.templates' => [
-                'form_test' => '{{ form(form) }}',
+                $this->getTestFormName() => '{{ form(form) }}',
             ],
         ]);
         $app->register(new CaptchaServiceProvider());
@@ -89,6 +93,20 @@ final class CaptchaServiceProviderTest extends WebTestCase
     }
 
     /**
+     * Returns a form containing only the captcha field.
+     *
+     * @return FormInterface
+     */
+    private function buildForm()
+    {
+        return $this->app['form.factory']
+            ->createNamedBuilder($this->getTestFormName())
+            ->add('captcha', CaptchaType::class)
+            ->getForm()
+        ;
+    }
+
+    /**
      * Returns an HTML form containing only the captcha field.
      *
      * @param FormInterface $form (optional) A pre-defined form object to be rendered (if left null, a fresh form will
@@ -98,22 +116,18 @@ final class CaptchaServiceProviderTest extends WebTestCase
      */
     private function buildFormHtml(FormInterface $form = null)
     {
-        return $this->app['twig']->render('form_test', [
+        return $this->app['twig']->render($this->getTestFormName(), [
             'form' => ($form ?: $this->buildForm())->createView(),
         ]);
     }
 
     /**
-     * Returns a form containing only the captcha field.
+     * Returns a constant test form identifier.
      *
-     * @return FormInterface
+     * @return string
      */
-    private function buildForm()
+    private function getTestFormName()
     {
-        return $this->app['form.factory']
-            ->createBuilder()
-            ->add('captcha', CaptchaType::class)
-            ->getForm()
-        ;
+        return 'test_form';
     }
 }
