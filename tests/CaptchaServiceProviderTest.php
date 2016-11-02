@@ -17,6 +17,7 @@ use Silex\Application;
 use Silex\Provider;
 use Silex\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -102,6 +103,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
         return $this->app['form.factory']
             ->createNamedBuilder($this->getTestFormName())
             ->add('captcha', CaptchaType::class)
+            ->add('submit', SubmitType::class)
             ->getForm()
         ;
     }
