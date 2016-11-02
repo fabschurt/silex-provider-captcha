@@ -17,7 +17,7 @@ use Silex\Application;
 use Silex\Provider;
 use Silex\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -57,6 +57,22 @@ final class CaptchaServiceProviderTest extends WebTestCase
                 )
                 ->count()
         )->same(3);
+    }
+
+    public function testViewFormInputValueIsAlwaysEmpty()
+    {
+        $form = $this->buildForm();
+        $form->submit([
+            $this->getTestFormName() => [
+                'captcha' => uniqid(),
+            ],
+        ]);
+        verify(
+            (new Crawler($this->buildFormHtml($form), 'http://dev/null'))
+                ->selectButton('Submit')
+                ->form()
+                ->getValues()["{$this->getTestFormName()}[captcha]"]
+        )->isEmpty();
     }
 
     /**
@@ -102,7 +118,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
         return $this->app['form.factory']
             ->createNamedBuilder($this->getTestFormName())
             ->add('captcha', CaptchaType::class)
-            ->add('submit', SubmitType::class)
+            ->add('submit', Type\SubmitType::class)
             ->getForm()
         ;
     }
