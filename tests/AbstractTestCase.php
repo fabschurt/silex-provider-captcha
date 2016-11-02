@@ -26,12 +26,9 @@ abstract class AbstractTestCase extends WebTestCase
      */
     public function createApplication()
     {
-        $app = new Application([
-            'debug'        => true,
-            'session.test' => true,
-        ]);
+        $app = new Application(['debug' => true]);
         unset($app['exception_handler']);
-        $app->register(new Provider\SessionServiceProvider());
+        $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
         $app->register(new Provider\FormServiceProvider());
         $app->register(new Provider\LocaleServiceProvider());
         $app->register(new Provider\TranslationServiceProvider());
