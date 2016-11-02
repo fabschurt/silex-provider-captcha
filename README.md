@@ -6,7 +6,7 @@ for now.
 This provider will give you access to a set of tools for easily working with
 captcha validation in forms, namely&nbsp;:
 
-* a `captcha` service for generating captchas
+* a `captcha` service for generating and verifying captchas
 * a route/controller couple which serves captcha images
 * a pre-configured `CaptchaType` form type
 * a Twig template for rendering within an HTML form
