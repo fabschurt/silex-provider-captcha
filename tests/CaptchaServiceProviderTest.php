@@ -17,6 +17,7 @@ use Silex\Application;
 use Silex\Provider;
 use Silex\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -88,19 +89,28 @@ final class CaptchaServiceProviderTest extends WebTestCase
     }
 
     /**
-     * Returns an HTML form containing only the captcha row/widget.
+     * Returns an HTML form containing only the captcha field.
      *
      * @return string
      */
     private function buildFormHtml()
     {
         return $this->app['twig']->render('form_test', [
-            'form' => $this->app['form.factory']
-                ->createBuilder()
-                ->add('captcha', CaptchaType::class)
-                ->getForm()
-                ->createView()
-            ,
+            'form' => $this->buildForm()->createView(),
         ]);
+    }
+
+    /**
+     * Returns a form containing only the captcha field.
+     *
+     * @return FormInterface
+     */
+    private function buildForm()
+    {
+        return $this->app['form.factory']
+            ->createBuilder()
+            ->add('captcha', CaptchaType::class)
+            ->getForm()
+        ;
     }
 }
