@@ -71,7 +71,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
             (new Crawler($this->buildFormHtml($form), 'http://dev/null'))
                 ->selectButton('Submit')
                 ->form()
-                ->getValues()["{$this->getTestFormName()}[captcha]"]
+                ->getPhpValues()[$this->getTestFormName()]['captcha']
         )->isEmpty();
     }
 
