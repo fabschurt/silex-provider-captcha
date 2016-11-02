@@ -44,7 +44,6 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testFormWidgetOutput()
     {
-        echo $this->buildFormHtml();
         $captchaFormRow = (new Crawler($this->buildFormHtml()))
             ->filter("#{$this->getTestFormName()} > div")
             ->eq(0)
