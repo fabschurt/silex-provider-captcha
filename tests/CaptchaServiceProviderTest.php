@@ -13,7 +13,7 @@ namespace FabSchurt\Silex\Provider\Captcha\Tests;
 
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use Silex\Application;
-use Silex\Provider\SessionServiceProvider;
+use Silex\Provider;
 use Silex\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,12 +38,13 @@ final class CaptchaServiceProviderTest extends WebTestCase
      */
     public function createApplication()
     {
-        $app = new Application();
-        $app['debug']        = true;
-        $app['session.test'] = true;
-        $app->register(new SessionServiceProvider());
-        $app->register(new CaptchaServiceProvider());
+        $app = new Application([
+            'debug'        => true,
+            'session.test' => true,
+        ]);
         unset($app['exception_handler']);
+        $app->register(new Provider\SessionServiceProvider());
+        $app->register(new CaptchaServiceProvider());
 
         return $app;
     }
