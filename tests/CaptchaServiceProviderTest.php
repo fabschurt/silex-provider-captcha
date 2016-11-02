@@ -109,7 +109,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
     }
 
     /**
-     * Returns a form containing only the captcha field.
+     * Returns a form object containing only the captcha field.
      *
      * @return FormInterface
      */
