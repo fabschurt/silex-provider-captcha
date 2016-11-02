@@ -11,11 +11,7 @@
 
 namespace FabSchurt\Silex\Provider\Captcha\Tests;
 
-use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use FabSchurt\Silex\Provider\Captcha\Form\Type\CaptchaType;
-use Silex\Application;
-use Silex\Provider;
-use Silex\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormInterface;
@@ -24,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
  */
-final class CaptchaServiceProviderTest extends WebTestCase
+final class CaptchaServiceProviderTest extends AbstractTestCase
 {
     public function testServiceIsRegistered()
     {
@@ -78,30 +74,6 @@ final class CaptchaServiceProviderTest extends WebTestCase
     /**
      * {@inheritDoc}
      */
-    public function createApplication()
-    {
-        $app = new Application([
-            'debug'        => true,
-            'session.test' => true,
-        ]);
-        unset($app['exception_handler']);
-        $app->register(new Provider\SessionServiceProvider());
-        $app->register(new Provider\FormServiceProvider());
-        $app->register(new Provider\LocaleServiceProvider());
-        $app->register(new Provider\TranslationServiceProvider());
-        $app->register(new Provider\TwigServiceProvider(), [
-            'twig.templates' => [
-                $this->getTestFormName() => '{{ form(form) }}',
-            ],
-        ]);
-        $app->register(new CaptchaServiceProvider());
-
-        return $app;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp()
     {
         parent::setup();
@@ -136,15 +108,5 @@ final class CaptchaServiceProviderTest extends WebTestCase
         return $this->app['twig']->render($this->getTestFormName(), [
             'form' => ($form ?: $this->buildForm())->createView(),
         ]);
-    }
-
-    /**
-     * Returns a constant test form identifier.
-     *
-     * @return string
-     */
-    private function getTestFormName()
-    {
-        return 'test_form';
     }
 }
