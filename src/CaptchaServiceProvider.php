@@ -32,13 +32,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
      */
     public function register(Container $container)
     {
-        // Dependencies
-        if (!isset($container['session'])) {
-            throw new \RuntimeException(
-                'You must register SessionServiceProvider before being able to use this provider.'
-            );
-        }
-
         // Parameters
         $container['captcha.url']           = '/captcha';
         $container['captcha.route_name']    = 'captcha';
@@ -49,6 +42,12 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
 
         // Services
         $container['captcha'] = function (Container $container) {
+            if (!isset($container['session'])) {
+                throw new \RuntimeException(
+                    'You must register SessionServiceProvider before being able to use this provider.'
+                );
+            }
+
             return new Captcha(
                 $container['captcha.builder_factory'],
                 $container['session'],

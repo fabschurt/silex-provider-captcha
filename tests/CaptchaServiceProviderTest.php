@@ -27,6 +27,13 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         verify($this->app)->hasKey('captcha');
     }
 
+    public function testExceptionIsThrownIfDependedOnProvidersAreNotRegistered()
+    {
+        $this->expectException(\RuntimeException::class);
+        unset($this->app['session']);
+        $this->app['captcha'];
+    }
+
     public function testDefaultRouteServesImage()
     {
         $this->client->request(Request::METHOD_GET, '/captcha');
