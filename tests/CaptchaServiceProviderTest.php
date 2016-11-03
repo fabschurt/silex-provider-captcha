@@ -71,6 +71,25 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         )->isEmpty();
     }
 
+    public function testFormValidation()
+    {
+        $validPhrase = 'Knowledge is power, guard it well';
+        $this->app['captcha']->generate($validPhrase);
+        $cycle = [
+            $validPhrase                 => true,
+            'Heresy grows from idleness' => false,
+        ];
+        foreach ($cycle as $phrase => $expectedValidity) {
+            $form = $this->buildForm();
+            $form->submit([
+                $this->getTestFormName() => [
+                    'captcha' => $phrase,
+                ],
+            ]);
+            verify($form->isValid())->same($expectedValidity);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
