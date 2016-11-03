@@ -48,7 +48,7 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
             $captchaFormRow
                 ->filter(
                     '.captcha-wrapper > .captcha-refresh-btn,'.
-                    '.captcha-wrapper > .img.captcha-img,'.
+                    '.captcha-wrapper > img.captcha-img,'.
                     'input[type="text"].captcha-input'
                 )
                 ->count()
