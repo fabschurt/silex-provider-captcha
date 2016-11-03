@@ -38,7 +38,7 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         )->same('image/jpeg');
     }
 
-    public function testFormWidgetOutput()
+    public function testRenderedFormWidgetContainsExpectedElements()
     {
         $captchaFormRow = (new Crawler($this->buildFormHtml()))
             ->filter("#{$this->getTestFormName()} > div")
