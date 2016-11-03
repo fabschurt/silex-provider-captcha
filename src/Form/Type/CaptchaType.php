@@ -11,17 +11,33 @@
 
 namespace FabSchurt\Silex\Provider\Captcha\Form\Type;
 
+use FabSchurt\Silex\Provider\Captcha\Service\Captcha;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
  */
 final class CaptchaType extends AbstractType
 {
+    /**
+     * @var Captcha
+     */
+    private $captcha;
+
+    /**
+     * @param Captcha $captcha
+     */
+    public function __construct(Captcha $captcha)
+    {
+        $this->captcha = $captcha;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -37,6 +53,18 @@ final class CaptchaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'constraints' => [
+                new Constraints\NotBlank(),
+                new Constraints\Callback(function ($value, ExecutionContextInterface $context) {
+                    if (!$this->captcha->verify($value)) {
+                        $context
+                            ->buildViolation('Invalid captcha value.')
+                            ->atPath($this->getBlockPrefix())
+                            ->addViolation()
+                        ;
+                    }
+                }),
+            ],
             'attr' => [
                 'class' => 'captcha-input',
             ],

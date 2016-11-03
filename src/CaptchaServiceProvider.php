@@ -11,11 +11,16 @@
 
 namespace FabSchurt\Silex\Provider\Captcha;
 
+use FabSchurt\Silex\Provider\Captcha\Form\Type\CaptchaType;
+use FabSchurt\Silex\Provider\Captcha\Service\Captcha;
+use FabSchurt\Silex\Provider\Captcha\Service\CaptchaBuilderFactory;
+use Gregwar\Captcha\PhraseBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Api\BootableProviderInterface;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
@@ -27,6 +32,50 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
      */
     public function register(Container $container)
     {
+        // Dependencies
+        if (!isset($container['session'])) {
+            throw new \RuntimeException(
+                'You must register SessionServiceProvider before being able to use this provider.'
+            );
+        }
+
+        // Parameters
+        $container['captcha.url']         = '/captcha';
+        $container['captcha.route_name']  = 'captcha';
+        $container['captcha.session_key'] = 'captcha.current';
+        $container['captcha.width']       = 120;
+        $container['captcha.height']      = 32;
+        $container['captcha.quality']     = 90;
+
+        // Services
+        $container['captcha'] = function (Container $container) {
+            return new Captcha(
+                $container['captcha.builder_factory'],
+                $container['session'],
+                $container['captcha.session_key'],
+                $container['captcha.width'],
+                $container['captcha.height'],
+                $container['captcha.quality']
+            );
+        };
+        $container['captcha.builder_factory'] = function (Container $container) {
+            return new CaptchaBuilderFactory($container['captcha.phrase_builder']);
+        };
+        $container['captcha.phrase_builder'] = function (Container $container) {
+            return new PhraseBuilder();
+        };
+
+        // Plug-ins
+        if (isset($container['form.factory'])) {
+            $container['form.types'] = $container->extend(
+                'form.types',
+                function (array $formTypes, Container $container) {
+                    $types[] = new CaptchaType($container['captcha']);
+
+                    return $types;
+                }
+            );
+        }
     }
 
     /**
@@ -34,6 +83,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
      */
     public function boot(Application $app)
     {
+        $app->mount('', $this);
     }
 
     /**
@@ -41,5 +91,15 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
      */
     public function connect(Application $app)
     {
+        $controllers = $app['controllers_factory'];
+        $controllers->get($app['captcha.url'], function (Application $app) {
+            return new Response(
+                $app['captcha']->generate(),
+                Response::HTTP_OK,
+                ['Content-Type' => 'image/jpeg']
+            );
+        })->bind($app['captcha.route_name']);
+
+        return $controllers;
     }
 }

@@ -35,5 +35,5 @@ interface CaptchaInterface
      *
      * @return bool
      */
-    public function isPhraseValid($inputPhrase);
+    public function verify($inputPhrase);
 }

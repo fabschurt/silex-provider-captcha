@@ -37,17 +37,17 @@ final class CaptchaTest extends AbstractTestCase
     }
 
     /**
-     * @testdox ->isPhraseValid()
+     * @testdox ->verify()
      */
-    public function testIsPhraseValid()
+    public function testVerify()
     {
         $validPhrase = 'Love is all you need';
         $this->subject->generate($validPhrase);
         $this->specify(
             'it should validate an input phrase against the currently stored phrase',
             function () use ($validPhrase) {
-                verify($this->subject->isPhraseValid($validPhrase))->true();
-                verify($this->subject->isPhraseValid('This is not the phrase you are looking for'))->false();
+                verify($this->subject->verify($validPhrase))->true();
+                verify($this->subject->verify('This is not the phrase you are looking for'))->false();
             }
         );
     }

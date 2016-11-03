@@ -58,11 +58,7 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
     public function testViewFormInputValueIsAlwaysEmpty()
     {
         $form = $this->buildForm();
-        $form->submit([
-            $this->getTestFormName() => [
-                'captcha' => uniqid(),
-            ],
-        ]);
+        $form->submit(['captcha' => uniqid()]);
         verify(
             (new Crawler($this->buildFormHtml($form), 'http://dev/null'))
                 ->selectButton('Submit')
@@ -78,14 +74,11 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         $cycle = [
             $validPhrase                 => true,
             'Heresy grows from idleness' => false,
+            ''                           => false,
         ];
         foreach ($cycle as $phrase => $expectedValidity) {
             $form = $this->buildForm();
-            $form->submit([
-                $this->getTestFormName() => [
-                    'captcha' => $phrase,
-                ],
-            ]);
+            $form->submit(['captcha' => $phrase]);
             verify($form->isValid())->same($expectedValidity);
         }
     }

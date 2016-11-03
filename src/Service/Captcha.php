@@ -87,7 +87,7 @@ final class Captcha implements CaptchaInterface
     /**
      * {@inheritDoc}
      */
-    public function isPhraseValid($inputPhrase)
+    public function verify($inputPhrase)
     {
         return $inputPhrase === $this->storage->get($this->storageKey);
     }

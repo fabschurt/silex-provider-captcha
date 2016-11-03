@@ -30,6 +30,7 @@ abstract class AbstractTestCase extends WebTestCase
         unset($app['exception_handler']);
         $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
         $app->register(new Provider\FormServiceProvider());
+        $app->register(new Provider\ValidatorServiceProvider());
         $app->register(new Provider\LocaleServiceProvider());
         $app->register(new Provider\TranslationServiceProvider());
         $app->register(new Provider\TwigServiceProvider(), [
