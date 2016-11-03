@@ -41,11 +41,15 @@ final class CaptchaTest extends AbstractTestCase
      */
     public function testIsPhraseValid()
     {
-        $this->subject->generate('Love is all you need');
-        $this->specify('it should validate an input phrase against the currently stored phrase', function () {
-            verify_that($this->subject->isPhraseValid('Love is all you need'));
-            verify_not($this->subject->isPhraseValid('This is not the phrase you are looking for'));
-        });
+        $validPhrase = 'Love is all you need';
+        $this->subject->generate($validPhrase);
+        $this->specify(
+            'it should validate an input phrase against the currently stored phrase',
+            function () use ($validPhrase) {
+                verify($this->subject->isPhraseValid($validPhrase))->true();
+                verify($this->subject->isPhraseValid('This is not the phrase you are looking for'))->false();
+            }
+        );
     }
 
     /**

@@ -30,7 +30,7 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
     public function testDefaultRouteServesImage()
     {
         $this->client->request(Request::METHOD_GET, '/captcha');
-        verify_that($this->client->getResponse()->isOk());
+        verify($this->client->getResponse()->isOk())->true();
         verify(
             (new \finfo(\FILEINFO_MIME_TYPE))->buffer(
                 $this->client->getResponse()->getContent()
