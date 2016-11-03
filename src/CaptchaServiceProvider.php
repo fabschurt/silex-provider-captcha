@@ -49,16 +49,13 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
             }
 
             return new Captcha(
-                $container['captcha.builder_factory'],
+                new CaptchaBuilderFactory(new PhraseBuilder()),
                 $container['session'],
                 $container['captcha.session_key'],
                 $container['captcha.image_width'],
                 $container['captcha.image_height'],
                 $container['captcha.image_quality']
             );
-        };
-        $container['captcha.builder_factory'] = function (Container $container) {
-            return new CaptchaBuilderFactory(new PhraseBuilder());
         };
 
         // Plug-ins
