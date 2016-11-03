@@ -9,7 +9,7 @@
 
 {%- block captcha_widget -%}{% spaceless %}
     <div class="captcha-wrapper">
-        <button type="button" class="captcha-refresh-btn" title="{{ 'Load a new image'|trans }}">
+        <button type="button" class="captcha-refresh-btn" title="{{ 'Load a new image'|trans({}, 'captcha') }}">
             <span class="captcha-refresh-btn-icon"></span>
         </button>
         <img src="{{ captcha_url }}"

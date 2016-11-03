@@ -83,6 +83,16 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         }
     }
 
+    public function testProviderComponentsAreTranslatable()
+    {
+        $this->app['captcha']->generate('Fear not the psyker');
+        $form = $this->buildForm();
+        $form->submit(['captcha' => 'There is no such thing as innocence, only degrees of guilt']);
+        $formHtml = $this->buildFormHtml($form);
+        verify($formHtml)->contains('Captcha invalide.');
+        verify($formHtml)->contains('Charger une nouvelle image');
+    }
+
     /**
      * {@inheritDoc}
      */

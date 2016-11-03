@@ -27,18 +27,31 @@ abstract class AbstractTestCase extends WebTestCase
     public function createApplication()
     {
         $app = new Application(['debug' => true]);
-        unset($app['exception_handler']);
         $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
         $app->register(new Provider\FormServiceProvider());
         $app->register(new Provider\ValidatorServiceProvider());
-        $app->register(new Provider\LocaleServiceProvider());
-        $app->register(new Provider\TranslationServiceProvider());
+        $app->register(new Provider\LocaleServiceProvider(), ['locale' => 'fr']);
+        $app->register(new Provider\TranslationServiceProvider(), [
+            'translator.domains' => [
+                'validators' => [
+                    'fr' => [
+                        'Invalid captcha value.' => 'Captcha invalide.',
+                    ],
+                ],
+                'captcha' => [
+                    'fr' => [
+                        'Load a new image' => 'Charger une nouvelle image',
+                    ]
+                ],
+            ]
+        ]);
         $app->register(new Provider\TwigServiceProvider(), [
             'twig.templates' => [
                 $this->getTestFormName() => '{{ form(form) }}',
             ],
         ]);
         $app->register(new CaptchaServiceProvider());
+        unset($app['exception_handler']);
         $app->boot();
         $app->flush();
 
