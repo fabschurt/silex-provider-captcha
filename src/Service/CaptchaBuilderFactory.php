@@ -27,7 +27,7 @@ final class CaptchaBuilderFactory implements CaptchaBuilderFactoryInterface
     /**
      * @param PhraseBuilderInterface $phraseBuilder
      */
-    public function __construct($phraseBuilder)
+    public function __construct(PhraseBuilderInterface $phraseBuilder)
     {
         $this->phraseBuilder = $phraseBuilder;
     }
