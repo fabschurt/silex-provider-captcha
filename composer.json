@@ -51,5 +51,10 @@
       "FabSchurt\\Silex\\Provider\\Captcha\\Tests\\": "tests/"
     }
   },
-  "prefer-stable": true
+  "prefer-stable": true,
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
 }
