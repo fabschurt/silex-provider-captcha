@@ -40,12 +40,12 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
         }
 
         // Parameters
-        $container['captcha.url']         = '/captcha';
-        $container['captcha.route_name']  = 'captcha';
-        $container['captcha.session_key'] = 'captcha.current';
-        $container['captcha.width']       = 120;
-        $container['captcha.height']      = 32;
-        $container['captcha.quality']     = 90;
+        $container['captcha.url']           = '/captcha';
+        $container['captcha.route_name']    = 'captcha';
+        $container['captcha.session_key']   = 'captcha.current';
+        $container['captcha.image_width']   = 120;
+        $container['captcha.image_height']  = 32;
+        $container['captcha.image_quality'] = 90;
 
         // Services
         $container['captcha'] = function (Container $container) {
@@ -53,9 +53,9 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                 $container['captcha.builder_factory'],
                 $container['session'],
                 $container['captcha.session_key'],
-                $container['captcha.width'],
-                $container['captcha.height'],
-                $container['captcha.quality']
+                $container['captcha.image_width'],
+                $container['captcha.image_height'],
+                $container['captcha.image_quality']
             );
         };
         $container['captcha.builder_factory'] = function (Container $container) {
@@ -76,8 +76,8 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                             $container['captcha.route_name'],
                             ['ts' => microtime()]
                         ),
-                        $container['captcha.width'],
-                        $container['captcha.height']
+                        $container['captcha.image_width'],
+                        $container['captcha.image_height']
                     );
 
                     return $types;
