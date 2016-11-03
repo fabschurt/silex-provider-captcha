@@ -41,13 +41,13 @@ final class CaptchaTest extends AbstractTestCase
      */
     public function testVerify()
     {
-        $validPhrase = 'Love is all you need';
+        $validPhrase = 'Blessed is the mind too small for doubt';
         $this->subject->generate($validPhrase);
         $this->specify(
             'it should validate an input phrase against the currently stored phrase',
             function () use ($validPhrase) {
                 verify($this->subject->verify($validPhrase))->true();
-                verify($this->subject->verify('This is not the phrase you are looking for'))->false();
+                verify($this->subject->verify('Hope is the first step on the road to disappointment'))->false();
             }
         );
     }

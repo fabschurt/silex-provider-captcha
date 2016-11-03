@@ -40,12 +40,12 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
 
     public function testRenderedFormWidgetContainsExpectedElements()
     {
-        $captchaFormRow = (new Crawler($this->buildFormHtml()))
+        $formCrawler = (new Crawler($this->buildFormHtml()))
             ->filter("#{$this->getTestFormName()} > div")
             ->eq(0)
         ;
         verify(
-            $captchaFormRow
+            $formCrawler
                 ->filter(
                     '.captcha-wrapper > .captcha-refresh-btn,'.
                     '.captcha-wrapper > img.captcha-img,'.
