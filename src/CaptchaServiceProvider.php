@@ -74,7 +74,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                         $container['captcha'],
                         $container['url_generator']->generate(
                             $container['captcha.route_name'],
-                            ['ts' => microtime()]
+                            ['ts' => time()]
                         ),
                         $container['captcha.image_width'],
                         $container['captcha.image_height']
