@@ -70,7 +70,15 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
             $container['form.types'] = $container->extend(
                 'form.types',
                 function (array $formTypes, Container $container) {
-                    $types[] = new CaptchaType($container['captcha']);
+                    $types[] = new CaptchaType(
+                        $container['captcha'],
+                        $container['url_generator']->generate(
+                            $container['captcha.route_name'],
+                            ['ts' => microtime()]
+                        ),
+                        $container['captcha.width'],
+                        $container['captcha.height']
+                    );
 
                     return $types;
                 }

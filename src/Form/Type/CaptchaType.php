@@ -31,11 +31,32 @@ final class CaptchaType extends AbstractType
     private $captcha;
 
     /**
-     * @param Captcha $captcha
+     * @var string
      */
-    public function __construct(Captcha $captcha)
+    private $captchaUrl;
+
+    /**
+     * @var int
+     */
+    private $imageWidth;
+
+    /**
+     * @var int
+     */
+    private $imageHeight;
+
+    /**
+     * @param Captcha $captcha
+     * @param string  $captchaUrl
+     * @param int     $imageWidth
+     * @param int     $imageHeight
+     */
+    public function __construct(Captcha $captcha, $captchaUrl, $imageWidth, $imageHeight)
     {
-        $this->captcha = $captcha;
+        $this->captcha     = $captcha;
+        $this->captchaUrl  = $captchaUrl;
+        $this->imageWidth  = $imageWidth;
+        $this->imageHeight = $imageHeight;
     }
 
     /**
@@ -43,8 +64,11 @@ final class CaptchaType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        // Make sure the input’s value is always empty (the user must type the captcha every time they send the form)
-        $view->vars['value'] = null;
+        $view->vars['value']        = null; // Make sure the input’s value is always empty (the user must type the captcha every time they send the form)
+        $view->vars['captcha_url']  = $this->captchaUrl;
+        $view->vars['image_width']  = $this->imageWidth;
+        $view->vars['image_height'] = $this->imageHeight;
+
     }
 
     /**
