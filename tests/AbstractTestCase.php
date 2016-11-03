@@ -39,6 +39,8 @@ abstract class AbstractTestCase extends WebTestCase
             ],
         ]);
         $app->register(new CaptchaServiceProvider());
+        $app->boot();
+        $app->flush();
 
         return $app;
     }

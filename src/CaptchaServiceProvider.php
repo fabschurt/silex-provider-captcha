@@ -83,6 +83,16 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                     return $types;
                 }
             );
+            if (isset($container['twig'])) {
+                $container['twig.path'] = array_merge(
+                    $container['twig.path'],
+                    [__DIR__.'/Resources/views']
+                );
+                $container['twig.form.templates'] = array_merge(
+                    $container['twig.form.templates'],
+                    ['captcha_block.html.twig']
+                );
+            }
         }
     }
 

@@ -1,0 +1,23 @@
+{#
+ # This file is part of the fabschurt/silex-provider-captcha package.
+ #
+ # (c) 2016 Fabien Schurter <fabien@fabschurt.com>
+ #
+ # For the full copyright and license information, please view the LICENSE
+ # file that was distributed with this source code.
+ #}
+
+{%- block captcha_widget -%}{% spaceless %}
+    <div class="captcha-wrapper">
+        <button type="button" class="captcha-refresh-btn" title="{{ 'Load a new image'|trans }}">
+            <span class="captcha-refresh-btn-icon"></span>
+        </button>
+        <img src="{{ captcha_url }}"
+             alt=""
+             width="{{ image_width }}"
+             height="{{ image_height }}"
+             class="captcha-img"
+        />
+    </div>
+    {{ block('form_widget') }}
+{% endspaceless %}{%- endblock captcha_widget -%}
