@@ -78,6 +78,21 @@ be able to plug the form functionality in.
 
 ## Usage
 
+### Captcha service
+
+Use the `captcha` service to generate and verify catpchas&nbsp;:
+
+```php
+$app['captcha']->generate(); // This will generate a random captcha phrase, store it in session and return a matching JPEG bytestream
+$app['captcha']->verify($someInput); // This will return `true` if the input value matches the phrase stored in session, `false` otherwise
+```
+
+If needed, you can also define the phrase to generate yourself&nbsp;:
+
+```php
+$app['captcha']->generate('a23rt7');
+```
+
 ### Captcha image
 
 You can now request a captcha JPEG image from the URL defined by the `captcha.url`
@@ -100,10 +115,25 @@ requested.
 ### Captcha form field
 
 In most cases, you’ll want to use a captcha to secure a form. This is made easy
-thanks to the provided `Form\Type\CaptchaType` class. This form type has
-preconfigured default validation rules&nbsp;:
+thanks to the provided `Form\Type\CaptchaType` class&nbsp;:
 
-* it should not be blank
+```php
+use FabSchurt\Silex\Provider\Captcha\Form\Type\CaptchaType;
+use Symfony\Component\Form\Extension\Core\Type;
+
+$form = $this->app['form.factory']
+    ->createBuilder()
+    ->add('name',    Type\Text::class)
+    ->add('message', Type\Text::class)
+    ->add('captcha', CaptchaType::class)
+    ->add('submit',  Type\SubmitType::class)
+    ->getForm()
+;
+```
+
+This form type has preconfigured default validation rules&nbsp;:
+
+* its value should not be blank
 * its value should match the captcha phrase currently stored in session
 
 There’s a default Twig form view widget provided for the form type (loaded from
