@@ -6,13 +6,17 @@ captcha validation (especially in forms), namely&nbsp;:
 * a `captcha` service for generating and verifying captchas
 * a route/controller which serves captcha images
 * a preconfigured `CaptchaType` form type
-* a Twig template for preconfigured rendering within an HTML form
+* a Twig widget for preconfigured rendering within an HTML form
 
 Everything will be automatically plugged in when you register the provider,
 given that the required dependencies are installed/registered (see below).
 
 The default captcha engine used by this provider is
 [Gregwar/Captcha](https://github.com/Gregwar/Captcha).
+
+*Note&nbsp;:* all the class names in this document (with the exception of PHP
+code blocks) are relative to the base `FabSchurt\Silex\Provider\Captcha`
+namespace.
 
 ## Requirements
 
@@ -28,9 +32,9 @@ Just require the provider with Composer file&nbsp;:
 composer require fabschurt/silex-provider-captcha:^1.0@dev
 ```
 
-If you want to use the provider’s full functionality (form type and template),
-you will need to register some core Silex providers, and before that, you will
-have to require their dependencies with Composer too&nbsp;:
+If you want to use the provider’s full functionality (form type and widget), you
+will need to register some core Silex providers, and before that, you will have
+to require their dependencies with Composer too&nbsp;:
 
 ```bash
 composer require symfony/config:^2.8|^3.0
@@ -77,7 +81,8 @@ be able to plug the form functionality in.
 ### Captcha image
 
 You can now request a captcha JPEG image from the URL defined by the `captcha.url`
-parameter. So, for example, in a Twig template&nbsp;:
+parameter (bound to the route defined by the `captcha.route_name` parameter).
+So, for example, in a Twig template&nbsp;:
 
 ```twig
 <img src="{{ path(app['captcha.route_name'], {cache_buster: 'now'|date('U')}) }}" alt="" />
@@ -85,8 +90,8 @@ parameter. So, for example, in a Twig template&nbsp;:
 
 *Note&nbsp;:* it is advised to use a cache busting mechanism (here&nbsp;: a
 `cache_buster` parameter whose value is based on current time), otherwise some
-browsers might keep the requested image in cache and display it even after page
-refresh.
+browsers might keep the requested image in cache and display it again even after
+page refresh.
 
 When the image is requested, the controller stores the corresponding phrase in
 session for later use/comparison. The phrase changes every time the image is
@@ -95,14 +100,16 @@ requested.
 ### Captcha form field
 
 In most cases, you’ll want to use a captcha to secure a form. This is made easy
-thanks to the provided `FabSchurt\Silex\Provider\Captcha\Form\Type\CaptchaType`.
-This form type has preconfigured default validation rules&nbsp;:
+thanks to the provided `Form\Type\CaptchaType` class. This form type has
+preconfigured default validation rules&nbsp;:
 
 * it should not be blank
 * its value should match the captcha phrase currently stored in session
 
-There’s a default form view widget provided for this form type, which should
-cover most use cases.
+There’s a default Twig form view widget provided for the form type (loaded from
+`src/Resources/views/captcha_block.html.twig`)&nbsp;; it should cover most use
+cases. The widget is automatically registered with the Twig service, so you don’t
+have anything special to do for your application to use it.
 
 ## Customization
 
@@ -112,15 +119,15 @@ for more information.
 
 Here goes a detailed table of the available parameters/services&nbsp;:
 
-| Key                   | Description                                                                                     | Expected type                                               | Default value                                                  |
-|-----------------------|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------------------|
-| captcha               | The main captcha service that will generate and verify captcha phrases                          | `FabSchurt\Silex\Provider\Captcha\Service\CaptchaInterface` | Instance of `FabSchurt\Silex\Provider\Captcha\Service\Captcha` |
-| captcha.url           | The URL from which captcha images are served                                                    | `string` (valid URL required)                               | `/captcha`                                                     |
-| captcha.route_name    | The Silex route name for the image-serving URL                                                  | `string`                                                    | `captcha`                                                      |
-| captcha.session_key   | The key under which the current captcha phrase will be stored in session                        | `string`                                                    | `captcha.current`                                              |
-| captcha.image_width   | The captcha image’s output width (actual width and `width` attribute on the `<img>` element)    | `integer`                                                   | `120`                                                          |
-| captcha.image_height  | The captcha image’s output height (actual height and `height` attribute on the `<img>` element) | `integer`                                                   | `32`                                                           |
-| captcha.image_quality | The captcha image’s compression level (`100` is great but heavier, `0` is crap but lighter)     | `integer`                                                   | `90`                                                           |
+| Key                   | Description                                                                                     | Expected type                 | Default value                                                  |
+|-----------------------|-------------------------------------------------------------------------------------------------|-------------------------------|-------------------------------|
+| captcha               | The main captcha service that will generate and verify captcha phrases                          | `Service\CaptchaInterface`    | Instance of `Service\Captcha` |
+| captcha.url           | The URL from which captcha images are served                                                    | `string` (valid URL required) | `/captcha`                    |
+| captcha.route_name    | The Silex route name for the image-serving URL                                                  | `string`                      | `captcha`                     |
+| captcha.session_key   | The key under which the current captcha phrase will be stored in session                        | `string`                      | `captcha.current`             |
+| captcha.image_width   | The captcha image’s output width (actual width and `width` attribute on the `<img>` element)    | `integer`                     | `120`                         |
+| captcha.image_height  | The captcha image’s output height (actual height and `height` attribute on the `<img>` element) | `integer`                     | `32`                          |
+| captcha.image_quality | The captcha image’s compression level (`100` is great but heavier, `0` is crap but lighter)     | `integer`                     | `90`                          |
 
 ## License
 
