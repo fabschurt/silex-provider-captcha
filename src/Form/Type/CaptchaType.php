@@ -68,7 +68,6 @@ final class CaptchaType extends AbstractType
         $view->vars['captcha_url']  = $this->captchaUrl;
         $view->vars['image_width']  = $this->imageWidth;
         $view->vars['image_height'] = $this->imageHeight;
-
     }
 
     /**
