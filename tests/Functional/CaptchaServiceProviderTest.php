@@ -9,9 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace FabSchurt\Silex\Provider\Captcha\Tests;
+namespace FabSchurt\Silex\Provider\Captcha\Tests\Functional;
 
+use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use FabSchurt\Silex\Provider\Captcha\Form\Type\CaptchaType;
+use Silex\Application;
+use Silex\Provider;
+use Silex\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormInterface;
@@ -20,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
  */
-final class CaptchaServiceProviderTest extends AbstractTestCase
+final class CaptchaServiceProviderTest extends WebTestCase
 {
     public function testServiceIsRegistered()
     {
@@ -39,11 +43,6 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         $phrase = 'For the glory of the Emperor';
         $this->app['captcha']->generate($phrase);
         verify($this->app['captcha']->verify($phrase))->true();
-    }
-
-    public function testCaptchaValidationFailsIfNoPhraseHasBeenStored()
-    {
-        verify($this->app['captcha']->verify('Fear denies faith'))->false();
     }
 
     public function testDefaultRouteServesImage()
@@ -115,10 +114,57 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
     /**
      * {@inheritDoc}
      */
+    public function createApplication()
+    {
+        $app = new Application(['debug' => true]);
+        $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
+        $app->register(new Provider\FormServiceProvider());
+        $app->register(new Provider\ValidatorServiceProvider());
+        $app->register(new Provider\LocaleServiceProvider(), ['locale' => 'fr']);
+        $app->register(new Provider\TranslationServiceProvider(), [
+            'translator.domains' => [
+                'validators' => [
+                    'fr' => [
+                        'Invalid captcha value.' => 'Captcha invalide.',
+                    ],
+                ],
+                'captcha' => [
+                    'fr' => [
+                        'Load a new image' => 'Charger une nouvelle image',
+                    ],
+                ],
+            ],
+        ]);
+        $app->register(new Provider\TwigServiceProvider(), [
+            'twig.templates' => [
+                $this->getTestFormName() => '{{ form(form) }}',
+            ],
+        ]);
+        $app->register(new CaptchaServiceProvider());
+        unset($app['exception_handler']);
+        $app->boot();
+        $app->flush();
+
+        return $app;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function setUp()
     {
         parent::setup();
         $this->client = $this->createClient();
+    }
+
+    /**
+     * Returns a constant test form identifier.
+     *
+     * @return string
+     */
+    protected function getTestFormName()
+    {
+        return 'test_form';
     }
 
     /**

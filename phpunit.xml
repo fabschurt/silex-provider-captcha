@@ -10,9 +10,14 @@
          enforceTimeLimit="true"
          verbose="true"
          colors="true">
-    <testsuite name="functional">
-        <directory>tests</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="Unit tests">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Functional tests">
+            <directory>tests/Functional</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>

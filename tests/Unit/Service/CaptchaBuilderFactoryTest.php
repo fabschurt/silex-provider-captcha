@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FabSchurt\Silex\Provider\Captcha\Tests\Service;
+namespace FabSchurt\Silex\Provider\Captcha\Tests\Unit\Service;
 
 use Codeception\Specify;
 use FabSchurt\Silex\Provider\Captcha\Service\Captcha;
@@ -39,6 +39,6 @@ final class CaptchaBuilderFactoryTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->subject = new CaptchaBuilderFactory(new PhraseBuilder());
+        $this->subject = new CaptchaBuilderFactory(\Phake::mock(PhraseBuilder::class));
     }
 }
