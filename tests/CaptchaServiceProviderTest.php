@@ -34,6 +34,18 @@ final class CaptchaServiceProviderTest extends AbstractTestCase
         $this->app['captcha'];
     }
 
+    public function testCaptchaValidation()
+    {
+        $phrase = 'For the glory of the Emperor';
+        $this->app['captcha']->generate($phrase);
+        verify($this->app['captcha']->verify($phrase))->true();
+    }
+
+    public function testCaptchaValidationFailsIfNoPhraseHasBeenStored()
+    {
+        verify($this->app['captcha']->verify('Fear denies faith'))->false();
+    }
+
     public function testDefaultRouteServesImage()
     {
         $this->client->request(Request::METHOD_GET, '/captcha');
