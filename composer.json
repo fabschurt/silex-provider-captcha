@@ -3,6 +3,7 @@
   "description": "Captcha service provider for Silex 2.",
   "type": "library",
   "homepage": "https://github.com/fabschurt/silex-provider-captcha",
+  "keywords": ["silex", "provider", "captcha"],
   "license": "MIT",
   "authors": [
     {
