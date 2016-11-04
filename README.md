@@ -26,7 +26,7 @@ namespace.
 
 ## Installation
 
-Just require the provider with Composer file&nbsp;:
+Just require the provider with Composer&nbsp;:
 
 ```bash
 composer require fabschurt/silex-provider-captcha:^1.0@dev
@@ -95,7 +95,7 @@ $app['captcha']->generate('a23rt7');
 
 ### Captcha image
 
-You can now request a captcha JPEG image from the URL defined by the `captcha.url`
+You can request a captcha JPEG image from the URL defined by the `captcha.url`
 parameter (bound to the route defined by the `captcha.route_name` parameter).
 So, for example, in a Twig template&nbsp;:
 
@@ -108,9 +108,8 @@ So, for example, in a Twig template&nbsp;:
 browsers might keep the requested image in cache and display it again even after
 page refresh.
 
-When the image is requested, the controller stores the corresponding phrase in
-session for later use/comparison. The phrase changes every time the image is
-requested.
+When the image is requested, the current phrase is stored in session for later
+use/comparison. The phrase changes every time the image is requested.
 
 ### Captcha form field
 
