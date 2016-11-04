@@ -119,15 +119,15 @@ for more information.
 
 Here goes a detailed table of the available parameters/services&nbsp;:
 
-| Key                   | Description                                                                                     | Expected type                 | Default value                                                  |
-|-----------------------|-------------------------------------------------------------------------------------------------|-------------------------------|-------------------------------|
-| captcha               | The main captcha service that will generate and verify captcha phrases                          | `Service\CaptchaInterface`    | Instance of `Service\Captcha` |
-| captcha.url           | The URL from which captcha images are served                                                    | `string` (valid URL required) | `/captcha`                    |
-| captcha.route_name    | The Silex route name for the image-serving URL                                                  | `string`                      | `captcha`                     |
-| captcha.session_key   | The key under which the current captcha phrase will be stored in session                        | `string`                      | `captcha.current`             |
-| captcha.image_width   | The captcha image’s output width (actual width and `width` attribute on the `<img>` element)    | `integer`                     | `120`                         |
-| captcha.image_height  | The captcha image’s output height (actual height and `height` attribute on the `<img>` element) | `integer`                     | `32`                          |
-| captcha.image_quality | The captcha image’s compression level (`100` is great but heavier, `0` is crap but lighter)     | `integer`                     | `90`                          |
+| Key                     | Description                                                                                     | Expected type                 | Default value                                                  |
+|-------------------------|-------------------------------------------------------------------------------------------------|-------------------------------|-------------------------------|
+| `captcha`               | The main captcha service that will generate and verify captcha phrases                          | `Service\CaptchaInterface`    | Instance of `Service\Captcha` |
+| `captcha.url`           | The URL from which captcha images are served                                                    | `string` (valid URL required) | `/captcha`                    |
+| `captcha.route_name`    | The Silex route name for the image-serving URL                                                  | `string`                      | `captcha`                     |
+| `captcha.session_key`   | The key under which the current captcha phrase will be stored in session                        | `string`                      | `captcha.current`             |
+| `captcha.image_width`   | The captcha image’s output width (actual width and `width` attribute on the `<img>` element)    | `integer`                     | `120`                         |
+| `captcha.image_height`  | The captcha image’s output height (actual height and `height` attribute on the `<img>` element) | `integer`                     | `32`                          |
+| `captcha.image_quality` | The captcha image’s compression level (`100` is great but heavier, `0` is crap but lighter)     | `integer`                     | `90`                          |
 
 ## License
 
