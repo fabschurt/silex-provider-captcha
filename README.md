@@ -1,8 +1,8 @@
 # Silex Captcha Provider (Silex 2)
 
 [![Build Status](https://travis-ci.org/fabschurt/silex-provider-captcha.svg?branch=master)](https://travis-ci.org/fabschurt/silex-provider-captcha)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ac09abe9-db9c-42e3-a06b-cfc1c0d8330d/mini.png)](https://insight.sensiolabs.com/projects/ac09abe9-db9c-42e3-a06b-cfc1c0d8330d)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cdf132338e264ea29d66ca8bed0ce865)](https://www.codacy.com/app/fabschurt/silex-provider-captcha)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ac09abe9-db9c-42e3-a06b-cfc1c0d8330d/mini.png)](https://insight.sensiolabs.com/projects/ac09abe9-db9c-42e3-a06b-cfc1c0d8330d)
 
 This provider will give you access to a set of tools for easily working with
 captcha validation (especially in forms), namely&nbsp;:
