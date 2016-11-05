@@ -192,8 +192,10 @@ final class CaptchaServiceProviderTest extends WebTestCase
      */
     private function buildFormHtml(FormInterface $form = null)
     {
+        $form = $form ?: $this->buildForm();
+
         return $this->app['twig']->render($this->getTestFormName(), [
-            'form' => ($form ?: $this->buildForm())->createView(),
+            'form' => $form->createView(),
         ]);
     }
 }
