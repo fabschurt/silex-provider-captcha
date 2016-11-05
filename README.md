@@ -50,13 +50,15 @@ composer require twig/twig
 ```
 
 Once the required dependencies are installed, just register the provider with
-the Silex application&nbsp;:
+the Silex application, after registering the `SessionServiceProvider`&nbsp;:
 
 ```php
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use Silex\Application;
+use Silex\Provider as SilexProvider;
 
 $app = new Application();
+$app->register(new SilexProvider\SessionServiceProvider());
 $app->register(new CaptchaServiceProvider());
 ```
 
@@ -69,6 +71,7 @@ use Silex\Application;
 use Silex\Provider as SilexProvider;
 
 $app = new Application();
+$app->register(new SilexProvider\SessionServiceProvider());
 $app->register(new SilexProvider\FormServiceProvider());
 $app->register(new SilexProvider\ValidatorServiceProvider());
 $app->register(new SilexProvider\LocaleServiceProvider());
