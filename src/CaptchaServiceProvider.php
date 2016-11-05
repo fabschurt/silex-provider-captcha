@@ -63,7 +63,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
             $container['form.types'] = $container->extend(
                 'form.types',
                 function (array $formTypes, Container $container) {
-                    $types[] = new CaptchaType(
+                    $formTypes[] = new CaptchaType(
                         $container['captcha'],
                         $container['url_generator']->generate(
                             $container['captcha.route_name'],
@@ -73,7 +73,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                         $container['captcha.image_height']
                     );
 
-                    return $types;
+                    return $formTypes;
                 }
             );
             if (isset($container['twig'])) {
