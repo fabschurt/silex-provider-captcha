@@ -47,17 +47,19 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testDefaultRouteServesImage()
     {
-        $this->client->request(Request::METHOD_GET, '/captcha');
-        verify($this->client->getResponse()->isOk())->true();
+        $client = $this->createClient();
+        $client->request(Request::METHOD_GET, '/captcha');
+        verify($client->getResponse()->isOk())->true();
         verify(
             (new \finfo(\FILEINFO_MIME_TYPE))->buffer(
-                $this->client->getResponse()->getContent()
+                $client->getResponse()->getContent()
             )
         )->same('image/jpeg');
     }
 
     public function testRenderedFormWidgetContainsExpectedElements()
     {
+        $this->bootApp();
         $formCrawler = (new Crawler($this->buildFormHtml()))
             ->filter("#{$this->getTestFormName()} > div")
             ->eq(0)
@@ -75,10 +77,11 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testViewFormInputValueIsAlwaysEmpty()
     {
+        $this->bootApp();
         $form = $this->buildForm();
         $form->submit(['captcha' => uniqid()]);
         verify(
-            (new Crawler($this->buildFormHtml($form), 'http://dev/null'))
+            (new Crawler($this->buildFormHtml($form), $this->getDummyUrl()))
                 ->selectButton('Submit')
                 ->form()
                 ->getPhpValues()[$this->getTestFormName()]['captcha']
@@ -87,6 +90,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testFormValidation()
     {
+        $this->bootApp();
         $validPhrase = 'Knowledge is power, guard it well';
         $this->app['captcha']->generate($validPhrase);
         $cycle = [
@@ -103,6 +107,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testProviderComponentsAreTranslatable()
     {
+        $this->bootApp();
         $this->app['captcha']->generate('Fear not the psyker');
         $form = $this->buildForm();
         $form->submit(['captcha' => 'There is no such thing as innocence, only degrees of guilt']);
@@ -142,29 +147,17 @@ final class CaptchaServiceProviderTest extends WebTestCase
         ]);
         $app->register(new CaptchaServiceProvider());
         unset($app['exception_handler']);
-        $app->boot();
-        $app->flush();
 
         return $app;
     }
 
     /**
-     * {@inheritDoc}
+     * Boots the test app and flushes its controllers.
      */
-    protected function setUp()
+    private function bootApp()
     {
-        parent::setup();
-        $this->client = $this->createClient();
-    }
-
-    /**
-     * Returns a constant test form identifier.
-     *
-     * @return string
-     */
-    protected function getTestFormName()
-    {
-        return 'test_form';
+        $this->app->boot();
+        $this->app->flush();
     }
 
     /**
@@ -197,5 +190,25 @@ final class CaptchaServiceProviderTest extends WebTestCase
         return $this->app['twig']->render($this->getTestFormName(), [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Returns a constant test form identifier.
+     *
+     * @return string
+     */
+    private function getTestFormName()
+    {
+        return 'test_form';
+    }
+
+    /**
+     * Returns a fake (but well-formed) URL.
+     *
+     * @return string
+     */
+    private function getDummyUrl()
+    {
+        return 'http://dev/null';
     }
 }
