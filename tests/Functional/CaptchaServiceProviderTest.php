@@ -107,6 +107,19 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testProviderComponentsAreTranslatable()
     {
+        $this->app['locale'] = 'fr';
+        $this->app['translator.domains'] = [
+            'validators' => [
+                'fr' => [
+                    'Invalid captcha value.' => 'Captcha invalide.',
+                ],
+            ],
+            'captcha' => [
+                'fr' => [
+                    'Load a new image' => 'Charger une nouvelle image',
+                ],
+            ],
+        ];
         $this->bootApp();
         $this->app['captcha']->generate('Fear not the psyker');
         $form = $this->buildForm();
@@ -125,21 +138,8 @@ final class CaptchaServiceProviderTest extends WebTestCase
         $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
         $app->register(new Provider\FormServiceProvider());
         $app->register(new Provider\ValidatorServiceProvider());
-        $app->register(new Provider\LocaleServiceProvider(), ['locale' => 'fr']);
-        $app->register(new Provider\TranslationServiceProvider(), [
-            'translator.domains' => [
-                'validators' => [
-                    'fr' => [
-                        'Invalid captcha value.' => 'Captcha invalide.',
-                    ],
-                ],
-                'captcha' => [
-                    'fr' => [
-                        'Load a new image' => 'Charger une nouvelle image',
-                    ],
-                ],
-            ],
-        ]);
+        $app->register(new Provider\LocaleServiceProvider());
+        $app->register(new Provider\TranslationServiceProvider());
         $app->register(new Provider\TwigServiceProvider(), [
             'twig.templates' => [
                 $this->getTestFormName() => '{{ form(form) }}',
