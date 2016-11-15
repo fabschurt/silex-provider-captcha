@@ -33,7 +33,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testExceptionIsThrownIfDependedOnProvidersAreNotRegistered()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\InvalidArgumentException::class);
         unset($this->app['session']);
         $this->app['captcha'];
     }

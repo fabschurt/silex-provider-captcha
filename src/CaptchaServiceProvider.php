@@ -42,12 +42,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
 
         // Services
         $container['captcha'] = function (Container $container) {
-            if (!isset($container['session'])) {
-                throw new \RuntimeException(
-                    'You must register SessionServiceProvider before being able to use this provider.'
-                );
-            }
-
             return new Captcha(
                 new CaptchaBuilderFactory(new PhraseBuilder()),
                 $container['session'],
