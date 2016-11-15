@@ -21,7 +21,6 @@ return Symfony\CS\Config\Config::create()
         'combine_consecutive_unsets',
         'empty_return',
         'ereg_to_preg',
-        'mb_str_functions',
         'newline_after_open_tag',
         'no_useless_else',
         'no_useless_return',
