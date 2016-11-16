@@ -53,7 +53,7 @@ class RoboFile extends Tasks
     public function cs(array $opts = ['fix' => false])
     {
         $this
-            ->taskExec(sprintf('./vendor/bin/php-cs-fixer fix -vvv %s', (bool) $opts['fix'] ? '' : '--dry-run'))
+            ->taskExec(sprintf('./vendor/bin/php-cs-fixer fix -vvv %s', $opts['fix'] ? '' : '--dry-run'))
             ->run()
         ;
     }
