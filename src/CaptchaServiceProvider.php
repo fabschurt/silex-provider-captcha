@@ -88,7 +88,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
      */
     public function boot(Application $app)
     {
-        $app->mount('', $this);
         $app['captcha']->generate(); // Initialize stored captcha so its value is never empty
     }
 

@@ -145,8 +145,10 @@ final class CaptchaServiceProviderTest extends WebTestCase
                 $this->getTestFormName() => '{{ form(form) }}',
             ],
         ]);
-        $app->register(new CaptchaServiceProvider());
         unset($app['exception_handler']);
+        $captchaProvider = new CaptchaServiceProvider();
+        $app->register($captchaProvider);
+        $app->mount('', $captchaProvider);
 
         return $app;
     }
