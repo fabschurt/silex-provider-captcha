@@ -24,28 +24,6 @@ class RoboFile extends Tasks
     }
 
     /**
-     * Installs the project’s dependencies.
-     *
-     * @option $environment Declare the current runtime environment, as the install process will be optimized
-     *                      differently according to this parameter; recognized values are: 'prod', 'dev' and 'ci'
-     */
-    public function install(array $opts = ['environment' => 'dev'])
-    {
-        $task = $this->taskComposerInstall();
-        if (in_array($opts['environment'], ['prod', 'ci'], true)) {
-            $task
-                ->preferDist()
-                ->optimizeAutoloader()
-                ->option('no-interaction')
-            ;
-        }
-        if ($opts['environment'] === 'prod') {
-            $task->noDev();
-        }
-        $task->run();
-    }
-
-    /**
      * Runs PHPUnit tests.
      */
     public function test()
