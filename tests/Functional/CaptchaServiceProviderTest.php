@@ -135,6 +135,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
     public function createApplication()
     {
         $app = new Application(['debug' => true]);
+        unset($app['exception_handler']);
         $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
         $app->register(new Provider\FormServiceProvider());
         $app->register(new Provider\ValidatorServiceProvider());
@@ -145,7 +146,6 @@ final class CaptchaServiceProviderTest extends WebTestCase
                 $this->getTestFormName() => '{{ form(form) }}',
             ],
         ]);
-        unset($app['exception_handler']);
         $captchaProvider = new CaptchaServiceProvider();
         $app->register($captchaProvider);
         $app->mount('', $captchaProvider);
