@@ -50,8 +50,8 @@ composer require twig/twig
 ```
 
 Once the required dependencies are installed, just register the provider with
-the Silex application, after registering the `SessionServiceProvider`, and mount
-the provider to gain access to the captcha route&nbsp;:
+the Silex application, as well as the `SessionServiceProvider`, and mount the
+provider to gain access to the captcha route&nbsp;:
 
 ```php
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
@@ -84,9 +84,6 @@ $captchaProvider = new CaptchaServiceProvider();
 $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
 ```
-
-Take good care of registering `CaptchaServiceProvider` last, otherwise it won’t
-be able to plug the form functionality in.
 
 ## Usage
 

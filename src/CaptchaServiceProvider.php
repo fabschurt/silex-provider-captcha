@@ -42,7 +42,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
 
         // Services
         $container['captcha'] = function (Container $container) {
-            return new Captcha(
+            $captcha = new Captcha(
                 new CaptchaBuilderFactory(new PhraseBuilder()),
                 $container['session'],
                 $container['captcha.session_key'],
@@ -50,37 +50,37 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                 $container['captcha.image_height'],
                 $container['captcha.image_quality']
             );
-        };
+            if (isset($container['form.factory'])) {
+                $container['form.types'] = $container->extend(
+                    'form.types',
+                    function (array $formTypes, Container $container) use ($captcha) {
+                        $formTypes[] = new CaptchaType(
+                            $captcha,
+                            $container['url_generator']->generate(
+                                $container['captcha.route_name'],
+                                ['ts' => time()] // This is used as permanent cache busting
+                            ),
+                            $container['captcha.image_width'],
+                            $container['captcha.image_height']
+                        );
 
-        // Plug-ins
-        if (isset($container['form.factory'])) {
-            $container['form.types'] = $container->extend(
-                'form.types',
-                function (array $formTypes, Container $container) {
-                    $formTypes[] = new CaptchaType(
-                        $container['captcha'],
-                        $container['url_generator']->generate(
-                            $container['captcha.route_name'],
-                            ['ts' => time()] // This is used as permanent cache busting
-                        ),
-                        $container['captcha.image_width'],
-                        $container['captcha.image_height']
+                        return $formTypes;
+                    }
+                );
+                if (isset($container['twig'])) {
+                    $container['twig.path'] = array_merge(
+                        $container['twig.path'],
+                        [__DIR__.'/Resources/views']
                     );
-
-                    return $formTypes;
+                    $container['twig.form.templates'] = array_merge(
+                        $container['twig.form.templates'],
+                        ['captcha_block.html.twig']
+                    );
                 }
-            );
-            if (isset($container['twig'])) {
-                $container['twig.path'] = array_merge(
-                    $container['twig.path'],
-                    [__DIR__.'/Resources/views']
-                );
-                $container['twig.form.templates'] = array_merge(
-                    $container['twig.form.templates'],
-                    ['captcha_block.html.twig']
-                );
             }
-        }
+
+            return $captcha;
+        };
     }
 
     /**
