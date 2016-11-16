@@ -154,7 +154,8 @@ final class CaptchaServiceProviderTest extends WebTestCase
     }
 
     /**
-     * Boots the test app and flushes its controllers.
+     * Boots the test app and flushes its controllers (required for tests that
+     * don’t mean to test `HttpKernel` responses).
      */
     private function bootApp()
     {

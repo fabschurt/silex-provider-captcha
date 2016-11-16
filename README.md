@@ -56,10 +56,10 @@ provider to gain access to the captcha route&nbsp;:
 ```php
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use Silex\Application;
-use Silex\Provider as SilexProvider;
+use Silex\Provider;
 
 $app = new Application();
-$app->register(new SilexProvider\SessionServiceProvider());
+$app->register(new Provider\SessionServiceProvider());
 $captchaProvider = new CaptchaServiceProvider();
 $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
@@ -71,15 +71,15 @@ will also need to register some core Silex providers&nbsp;:
 ```php
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use Silex\Application;
-use Silex\Provider as SilexProvider;
+use Silex\Provider;
 
 $app = new Application();
-$app->register(new SilexProvider\SessionServiceProvider());
-$app->register(new SilexProvider\FormServiceProvider());
-$app->register(new SilexProvider\ValidatorServiceProvider());
-$app->register(new SilexProvider\LocaleServiceProvider());
-$app->register(new SilexProvider\TranslationServiceProvider());
-$app->register(new SilexProvider\TwigServiceProvider());
+$app->register(new Provider\SessionServiceProvider());
+$app->register(new Provider\FormServiceProvider());
+$app->register(new Provider\ValidatorServiceProvider());
+$app->register(new Provider\LocaleServiceProvider());
+$app->register(new Provider\TranslationServiceProvider());
+$app->register(new Provider\TwigServiceProvider());
 $captchaProvider = new CaptchaServiceProvider();
 $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
