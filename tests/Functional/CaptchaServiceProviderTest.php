@@ -71,7 +71,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
         $this->bootApp();
         $formCrawler = (new Crawler($this->buildFormHtml()))
             ->filter("#{$this->getTestFormName()} > div")
-            ->eq(0)
+            ->first()
         ;
         verify(
             $formCrawler
