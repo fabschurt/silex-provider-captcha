@@ -112,7 +112,7 @@ So, for example, in a Twig template&nbsp;:
 <img src="{{ path(app['captcha.route_name'], {cache_buster: 'now'|date('U')}) }}" alt="" />
 ```
 
-*Note&nbsp;:* it is advised to use a cache busting mechanism (here&nbsp;: a
+*Note&nbsp;:* it is recommended to use a cache busting mechanism (here&nbsp;: a
 `cache_buster` parameter whose value is based on current time), otherwise some
 browsers might keep the requested image in cache and display it again even after
 page refresh.
@@ -146,8 +146,9 @@ This form type has preconfigured default validation rules&nbsp;:
 
 There’s a default Twig form view widget provided for the form type (loaded from
 `src/Resources/views/captcha_block.html.twig`)&nbsp;; it should cover most use
-cases. The widget is automatically registered with the Twig service, so you don’t
-have anything special to do for your application to use it.
+cases, and has built-in JavaScript for captcha image refreshing. The widget is
+automatically registered with the Twig service, so you don’t have anything
+special to do for your application to use it.
 
 ## Customization
 

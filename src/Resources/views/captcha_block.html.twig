@@ -9,7 +9,10 @@
 
 {%- block captcha_widget -%}{% spaceless %}
     <div class="captcha-wrapper">
-        <button type="button" class="captcha-refresh-btn" title="{{ 'Load a new image'|trans({}, 'captcha') }}">
+        <button type="button"
+                class="captcha-refresh-btn"
+                title="{{ 'Load a new image'|trans({}, 'captcha') }}"
+                onclick="var img = document.querySelector('img.captcha-img'); img.setAttribute('src', img.getAttribute('src').replace(/=\d+/, '=' + Date.now()));">
             <span class="captcha-refresh-btn-icon"></span>
         </button>
         <img src="{{ captcha_url }}"

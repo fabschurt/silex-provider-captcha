@@ -58,7 +58,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                             $captcha,
                             $container['url_generator']->generate(
                                 $container['captcha.route_name'],
-                                ['ts' => time()] // This is used as permanent cache busting
+                                ['ts' => microtime()] // This is used as permanent cache busting
                             ),
                             $container['captcha.image_width'],
                             $container['captcha.image_height']
