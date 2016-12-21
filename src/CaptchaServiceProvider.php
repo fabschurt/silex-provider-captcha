@@ -42,7 +42,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
 
         // Services
         $container['captcha'] = function (Container $container) {
-            $captcha = new Captcha(
+            return new Captcha(
                 new CaptchaBuilderFactory(new PhraseBuilder()),
                 $container['session'],
                 $container['captcha.storage_key'],
@@ -50,36 +50,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                 $container['captcha.image_height'],
                 $container['captcha.image_quality']
             );
-            if (isset($container['form.factory'])) {
-                $container['form.types'] = $container->extend(
-                    'form.types',
-                    function (array $formTypes, Container $container) use ($captcha) {
-                        $formTypes[] = new CaptchaType(
-                            $captcha,
-                            $container['url_generator']->generate(
-                                $container['captcha.route_name'],
-                                ['ts' => microtime()] // This is used as permanent cache busting
-                            ),
-                            $container['captcha.image_width'],
-                            $container['captcha.image_height']
-                        );
-
-                        return $formTypes;
-                    }
-                );
-                if (isset($container['twig'])) {
-                    $container['twig.path'] = array_merge(
-                        $container['twig.path'],
-                        [__DIR__.'/Resources/views']
-                    );
-                    $container['twig.form.templates'] = array_merge(
-                        $container['twig.form.templates'],
-                        ['captcha_block.html.twig']
-                    );
-                }
-            }
-
-            return $captcha;
         };
     }
 
@@ -88,7 +58,31 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
      */
     public function boot(Application $app)
     {
-        $app['captcha']->generate(); // Initialize stored captcha so its value is never empty
+        if (isset($app['form.factory'])) {
+            $app['form.types'] = $app->extend('form.types', function (array $formTypes, Application $app) {
+                $formTypes[] = new CaptchaType(
+                    $app['captcha'],
+                    $app['url_generator']->generate(
+                        $app['captcha.route_name'],
+                        ['ts' => microtime()] // This is used as permanent cache busting
+                    ),
+                    $app['captcha.image_width'],
+                    $app['captcha.image_height']
+                );
+
+                return $formTypes;
+            });
+            if (isset($app['twig'])) {
+                $app['twig.path'] = array_merge(
+                    [__DIR__.'/Resources/views'],
+                    $app['twig.path']
+                );
+                $app['twig.form.templates'] = array_merge(
+                    ['captcha_block.html.twig'],
+                    $app['twig.form.templates']
+                );
+            }
+        }
     }
 
     /**
