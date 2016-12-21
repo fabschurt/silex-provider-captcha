@@ -62,14 +62,11 @@ final class CaptchaTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->specifyConfig()->shallowClone();
-
         $this->validPhrase    = 'Blessed is the mind too small for doubt';
         $this->testStorageKey = 'test.captcha.current';
-
         $this->session = $this->prophesize(SessionInterface::class);
         $this->session->set(Argument::cetera())->willReturn(null);
         $this->session->get($this->testStorageKey)->willReturn($this->validPhrase);
-
         $builder        = $this->prophesize(CaptchaBuilder::class);
         $builderFactory = $this->prophesize(CaptchaBuilderFactoryInterface::class);
         ob_start();
@@ -79,7 +76,6 @@ final class CaptchaTest extends \PHPUnit_Framework_TestCase
         $builder->get(Argument::any())->willReturn($jpegStream);
         $builder->getPhrase()->willReturn($this->validPhrase);
         $builderFactory->createBuilder(Argument::any())->willReturn($builder->reveal());
-
         $this->subject = new Captcha($builderFactory->reveal(), $this->session->reveal(), $this->testStorageKey);
     }
 }
