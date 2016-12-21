@@ -11,7 +11,7 @@
 
 namespace FabSchurt\Silex\Provider\Captcha\Form\Type;
 
-use FabSchurt\Silex\Provider\Captcha\Service\Captcha;
+use FabSchurt\Silex\Provider\Captcha\Service\CaptchaInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
@@ -48,10 +48,10 @@ final class CaptchaType extends AbstractType
     /**
      * @param Captcha $captcha
      * @param string  $captchaUrl
-     * @param int     $imageWidth
-     * @param int     $imageHeight
+     * @param int     $imageWidth  (optional) Default: 120
+     * @param int     $imageHeight (optional) Default: 32
      */
-    public function __construct(Captcha $captcha, $captchaUrl, $imageWidth, $imageHeight)
+    public function __construct(CaptchaInterface $captcha, $captchaUrl, $imageWidth = 120, $imageHeight = 32)
     {
         $this->captcha     = $captcha;
         $this->captchaUrl  = $captchaUrl;
