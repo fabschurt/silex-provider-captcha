@@ -74,20 +74,18 @@ final class CaptchaServiceProviderTest extends WebTestCase
             verify($this->app['captcha']->verify('Fear denies faith'))->false();
         });
 
-        $this->specify('form validity should depend on captcha field validity', function () {
-            $validPhrase = 'Knowledge is power, guard it well';
-            $this->app['captcha']->generate($validPhrase);
-            $cycle = [
-                $validPhrase                 => true,
-                'Heresy grows from idleness' => false,
-                ''                           => false,
-            ];
-            foreach ($cycle as $phrase => $expectedValidity) {
-                $form = $this->buildForm();
-                $form->submit(['captcha' => $phrase]);
-                verify($form->isValid())->same($expectedValidity);
-            }
-        });
+        $this->specify('form validity should depend on captcha field validity', function ($phrase, $expectedValidity) {
+            $this->app['captcha']->generate('Knowledge is power, guard it well');
+            $form = $this->buildForm();
+            $form->submit(['captcha' => $phrase]);
+            verify($form->isValid())->same($expectedValidity);
+        }, [
+            'examples' => [
+                ['Knowledge is power, guard it well', true],
+                ['Heresy grows from idleness', false],
+                ['', false],
+            ],
+        ]);
     }
 
     public function testFormWidget()
