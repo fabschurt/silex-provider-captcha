@@ -11,6 +11,7 @@
 
 namespace FabSchurt\Silex\Provider\Captcha\Tests\Functional;
 
+use Codeception\Specify;
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use FabSchurt\Silex\Provider\Captcha\Form\Type\CaptchaType;
 use Silex\Application;
@@ -26,6 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class CaptchaServiceProviderTest extends WebTestCase
 {
+    use Specify;
+
     public function testServiceIsRegistered()
     {
         verify($this->app)->hasKey('captcha');
@@ -40,9 +43,15 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testCaptchaValidation()
     {
-        $phrase = 'For the glory of the Emperor';
-        $this->app['captcha']->generate($phrase);
-        verify($this->app['captcha']->verify($phrase))->true();
+        $this->specify('validation should pass if stored phrase equals verified phrase', function () {
+            $phrase = 'For the glory of the Emperor';
+            $this->app['captcha']->generate($phrase);
+            verify($this->app['captcha']->verify($phrase))->true();
+        });
+
+        $this->specify('validation should fail if no phrase has been stored yet', function () {
+            verify($this->app['captcha']->verify('Fear denies faith'))->false();
+        });
     }
 
     public function testDefaultRouteServesImage()

@@ -12,7 +12,6 @@
 namespace FabSchurt\Silex\Provider\Captcha\Tests\Unit\Service;
 
 use Codeception\Specify;
-use FabSchurt\Silex\Provider\Captcha\Service\Captcha;
 use FabSchurt\Silex\Provider\Captcha\Service\CaptchaBuilderFactory;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
@@ -39,6 +38,10 @@ final class CaptchaBuilderFactoryTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->subject = new CaptchaBuilderFactory(\Phake::mock(PhraseBuilder::class));
+        $this->specifyConfig()->shallowClone();
+
+        $this->subject = new CaptchaBuilderFactory(
+            $this->prophesize(PhraseBuilder::class)->reveal()
+        );
     }
 }

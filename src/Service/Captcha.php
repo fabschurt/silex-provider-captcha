@@ -52,17 +52,17 @@ final class Captcha implements CaptchaInterface
      * @param CaptchaBuilderFactoryInterface $builderFactory
      * @param SessionInterface               $storage
      * @param string                         $storageKey
-     * @param int                            $imageWidth
-     * @param int                            $imageHeight
-     * @param int                            $imageQuality
+     * @param int                            $imageWidth     (optional) Default: 120
+     * @param int                            $imageHeight    (optional) Default: 32
+     * @param int                            $imageQuality   (optional) Default: 90
      */
     public function __construct(
         CaptchaBuilderFactoryInterface $builderFactory,
         SessionInterface $storage,
         $storageKey,
-        $imageWidth,
-        $imageHeight,
-        $imageQuality
+        $imageWidth = 120,
+        $imageHeight = 32,
+        $imageQuality = 90
     ) {
         $this->builderFactory = $builderFactory;
         $this->storage        = $storage;
@@ -78,7 +78,7 @@ final class Captcha implements CaptchaInterface
     public function generate($phrase = null)
     {
         $builder = $this->builderFactory->createBuilder($phrase);
-        $builder->build($this->imageWidth, $this->imageHeight);
+        $builder->build($this->imageWidth, $this->imageHeight, null, null);
         $this->storage->set($this->storageKey, $builder->getPhrase());
 
         return $builder->get($this->imageQuality);
