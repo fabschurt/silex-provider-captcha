@@ -29,113 +29,120 @@ final class CaptchaServiceProviderTest extends WebTestCase
 {
     use Specify;
 
-    public function testServiceIsRegistered()
+    public function testServiceRegistration()
     {
-        verify($this->app)->hasKey('captcha');
+        $this->bootApp();
+
+        $this->specify('captcha service should be registered', function () {
+            verify($this->app)->hasKey('captcha');
+        });
+
+        $this->specify('an exception should be thrown if there are missing dependencies', function () {
+            unset($this->app['session']);
+            $this->app['captcha'];
+        }, [
+            'throws' => \InvalidArgumentException::class,
+        ]);
     }
 
-    public function testExceptionIsThrownIfDependedOnProvidersAreNotRegistered()
+    public function testCaptchaImage()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        unset($this->app['session']);
-        $this->app['captcha'];
+        $this->specify('default route should serve a JPEG image', function () {
+            $client = $this->createClient();
+            $client->request(Request::METHOD_GET, '/captcha');
+            verify($client->getResponse()->isOk())->true();
+            verify(
+                (new \finfo(\FILEINFO_MIME_TYPE))->buffer($client->getResponse()->getContent())
+            )->same('image/jpeg');
+        });
     }
 
     public function testCaptchaValidation()
     {
+        $this->bootApp();
+
         $this->specify('validation should pass if stored phrase equals verified phrase', function () {
             $phrase = 'For the glory of the Emperor';
             $this->app['captcha']->generate($phrase);
+            verify($this->app['session']->get($this->app['captcha.storage_key']))->same($phrase);
             verify($this->app['captcha']->verify($phrase))->true();
+            verify($this->app['captcha']->verify('Fear denies faith'))->false();
         });
 
         $this->specify('validation should fail if no phrase has been stored yet', function () {
+            verify_not($this->app['session']->get($this->app['captcha.storage_key']));
             verify($this->app['captcha']->verify('Fear denies faith'))->false();
+        });
+
+        $this->specify('form validity should depend on captcha field validity', function () {
+            $validPhrase = 'Knowledge is power, guard it well';
+            $this->app['captcha']->generate($validPhrase);
+            $cycle = [
+                $validPhrase                 => true,
+                'Heresy grows from idleness' => false,
+                ''                           => false,
+            ];
+            foreach ($cycle as $phrase => $expectedValidity) {
+                $form = $this->buildForm();
+                $form->submit(['captcha' => $phrase]);
+                verify($form->isValid())->same($expectedValidity);
+            }
         });
     }
 
-    public function testDefaultRouteServesImage()
+    public function testFormWidget()
     {
-        $client = $this->createClient();
-        $client->request(Request::METHOD_GET, '/captcha');
-        verify($client->getResponse()->isOk())->true();
-        verify(
-            (new \finfo(\FILEINFO_MIME_TYPE))->buffer(
-                $client->getResponse()->getContent()
-            )
-        )->same('image/jpeg');
-    }
+        $this->specify('built-in form widget should contain some expected elements', function () {
+            $this->bootApp();
+            $formCrawler = (new Crawler($this->buildFormHtml()))
+                ->filter("#{$this->getTestFormName()} > div")
+                ->first()
+            ;
+            verify(
+                $formCrawler
+                    ->filter(
+                        '.captcha-wrapper > .captcha-refresh-btn,'.
+                        '.captcha-wrapper > img.captcha-img,'.
+                        'input[type="text"].captcha-input'
+                    )
+                    ->count()
+            )->same(3);
+        });
 
-    public function testRenderedFormWidgetContainsExpectedElements()
-    {
-        $this->bootApp();
-        $formCrawler = (new Crawler($this->buildFormHtml()))
-            ->filter("#{$this->getTestFormName()} > div")
-            ->first()
-        ;
-        verify(
-            $formCrawler
-                ->filter(
-                    '.captcha-wrapper > .captcha-refresh-btn,'.
-                    '.captcha-wrapper > img.captcha-img,'.
-                    'input[type="text"].captcha-input'
-                )
-                ->count()
-        )->same(3);
-    }
-
-    public function testViewFormInputValueIsAlwaysEmpty()
-    {
-        $this->bootApp();
-        $form = $this->buildForm();
-        $form->submit(['captcha' => uniqid()]);
-        verify(
-            (new Crawler($this->buildFormHtml($form), $this->getDummyUrl()))
-                ->selectButton('Submit')
-                ->form()
-                ->getPhpValues()[$this->getTestFormName()]['captcha']
-        )->isEmpty();
-    }
-
-    public function testFormValidation()
-    {
-        $this->bootApp();
-        $validPhrase = 'Knowledge is power, guard it well';
-        $this->app['captcha']->generate($validPhrase);
-        $cycle = [
-            $validPhrase                 => true,
-            'Heresy grows from idleness' => false,
-            ''                           => false,
-        ];
-        foreach ($cycle as $phrase => $expectedValidity) {
+        $this->specify('captcha form input value should always be empty after form submission', function () {
+            $this->bootApp();
             $form = $this->buildForm();
-            $form->submit(['captcha' => $phrase]);
-            verify($form->isValid())->same($expectedValidity);
-        }
-    }
+            $form->submit(['captcha' => uniqid()]);
+            verify_not(
+                (new Crawler($this->buildFormHtml($form), $this->getDummyUrl())) // We must pass a dummy URL to the crawler constructor, otherwise form functionality can’t be used
+                    ->selectButton('Submit')
+                    ->form()
+                    ->getPhpValues()[$this->getTestFormName()]['captcha']
+            );
+        });
 
-    public function testProviderComponentsAreTranslatable()
-    {
-        $this->app['locale'] = 'fr';
-        $this->app['translator.domains'] = [
-            'validators' => [
-                'fr' => [
-                    'Invalid captcha value.' => 'Captcha invalide.',
+        $this->specify('form field label and help text should be translatable', function () {
+            $this->app['locale'] = 'fr';
+            $this->app['translator.domains'] = [
+                'validators' => [
+                    'fr' => [
+                        'Invalid captcha value.' => 'Captcha invalide.',
+                    ],
                 ],
-            ],
-            'captcha' => [
-                'fr' => [
-                    'Load a new image' => 'Charger une nouvelle image',
+                'captcha' => [
+                    'fr' => [
+                        'Load a new image' => 'Charger une nouvelle image',
+                    ],
                 ],
-            ],
-        ];
-        $this->bootApp();
-        $this->app['captcha']->generate('Fear not the psyker');
-        $form = $this->buildForm();
-        $form->submit(['captcha' => 'There is no such thing as innocence, only degrees of guilt']);
-        $formHtml = $this->buildFormHtml($form);
-        verify($formHtml)->contains('Captcha invalide.');
-        verify($formHtml)->contains('Charger une nouvelle image');
+            ];
+            $this->bootApp();
+            $this->app['captcha']->generate('Fear not the psyker');
+            $form = $this->buildForm();
+            $form->submit(['captcha' => 'There is no such thing as innocence, only degrees of guilt']);
+            $formHtml = $this->buildFormHtml($form);
+            verify($formHtml)->contains('Captcha invalide.');
+            verify($formHtml)->contains('Charger une nouvelle image');
+        });
     }
 
     /**
@@ -160,6 +167,15 @@ final class CaptchaServiceProviderTest extends WebTestCase
         $app->mount('', $captchaProvider);
 
         return $app;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp()
+    {
+        $this->specifyConfig()->shallowClone();
+        parent::setUp();
     }
 
     /**
