@@ -31,8 +31,6 @@ final class CaptchaServiceProviderTest extends WebTestCase
 
     public function testServiceRegistration()
     {
-        $this->bootApp();
-
         $this->specify('captcha service should be registered', function () {
             verify($this->app)->hasKey('captcha');
         });
