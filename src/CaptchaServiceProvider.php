@@ -35,7 +35,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
         // Parameters
         $container['captcha.url']           = '/captcha';
         $container['captcha.route_name']    = 'captcha';
-        $container['captcha.session_key']   = 'captcha.current';
+        $container['captcha.storage_key']   = 'captcha.current';
         $container['captcha.image_width']   = 120;
         $container['captcha.image_height']  = 32;
         $container['captcha.image_quality'] = 90;
@@ -45,7 +45,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
             $captcha = new Captcha(
                 new CaptchaBuilderFactory(new PhraseBuilder()),
                 $container['session'],
-                $container['captcha.session_key'],
+                $container['captcha.storage_key'],
                 $container['captcha.image_width'],
                 $container['captcha.image_height'],
                 $container['captcha.image_quality']
