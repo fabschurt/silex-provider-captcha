@@ -59,7 +59,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
     public function boot(Application $app)
     {
         if (isset($app['form.factory'])) {
-            $app['form.types'] = $app->extend('form.types', function (array $formTypes, Application $app) {
+            $app->extend('form.types', function (array $formTypes, Application $app) {
                 $formTypes[] = new CaptchaType(
                     $app['captcha'],
                     $app['url_generator']->generate(
