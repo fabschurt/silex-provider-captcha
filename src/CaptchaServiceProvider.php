@@ -17,7 +17,6 @@ use FabSchurt\Silex\Provider\Captcha\Service\CaptchaBuilderFactory;
 use Gregwar\Captcha\PhraseBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Silex\Api\BootableProviderInterface;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
  */
-final class CaptchaServiceProvider implements ServiceProviderInterface, BootableProviderInterface, ControllerProviderInterface
+final class CaptchaServiceProvider implements ServiceProviderInterface, ControllerProviderInterface
 {
     /**
      * {@inheritDoc}
@@ -51,38 +50,29 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Bootable
                 $container['captcha.image_quality']
             );
         };
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function boot(Application $app)
-    {
-        if (isset($app['form.factory'])) {
-            $app->extend('form.types', function (array $formTypes, Application $app) {
-                $formTypes[] = new CaptchaType(
-                    $app['captcha'],
-                    $app['url_generator']->generate(
-                        $app['captcha.route_name'],
-                        ['ts' => microtime()] // This is used as permanent cache busting
-                    ),
-                    $app['captcha.image_width'],
-                    $app['captcha.image_height']
-                );
+        // Service extension
+        $container->extend('form.types', function (array $formTypes, Container $container) {
+            $formTypes[] = new CaptchaType(
+                $container['captcha'],
+                $container['url_generator']->generate(
+                    $container['captcha.route_name'],
+                    ['ts' => microtime()] // This is used as permanent cache busting
+                ),
+                $container['captcha.image_width'],
+                $container['captcha.image_height']
+            );
 
-                return $formTypes;
-            });
-            if (isset($app['twig'])) {
-                $app['twig.path'] = array_merge(
-                    [__DIR__.'/Resources/views'],
-                    $app['twig.path']
-                );
-                $app['twig.form.templates'] = array_merge(
-                    ['captcha_block.html.twig'],
-                    $app['twig.form.templates']
-                );
-            }
-        }
+            return $formTypes;
+        });
+        $container['twig.path'] = array_merge(
+            [__DIR__.'/Resources/views'],
+            $container['twig.path']
+        );
+        $container['twig.form.templates'] = array_merge(
+            ['captcha_block.html.twig'],
+            $container['twig.form.templates']
+        );
     }
 
     /**

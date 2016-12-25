@@ -85,6 +85,9 @@ $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
 ```
 
+**Important&nbsp;:** you **MUST** register the captcha provider after all the
+other depended-on providers, otherwise the form functionality won’t work.
+
 ## Usage
 
 ### Captcha service
