@@ -20,6 +20,7 @@ use Pimple\ServiceProviderInterface;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
+use Twig_Loader_Filesystem as FilesystemLoader;
 
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
@@ -52,27 +53,35 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
         };
 
         // Service extension
-        $container->extend('form.types', function (array $formTypes, Container $container) {
-            $formTypes[] = new CaptchaType(
-                $container['captcha'],
-                $container['url_generator']->generate(
-                    $container['captcha.route_name'],
-                    ['ts' => microtime()] // This is used as permanent cache busting
-                ),
-                $container['captcha.image_width'],
-                $container['captcha.image_height']
-            );
+        if (isset($container['form.factory'])) {
+            $container->extend('form.types', function (array $formTypes, Container $container) {
+                $formTypes[] = new CaptchaType(
+                    $container['captcha'],
+                    $container['url_generator']->generate(
+                        $container['captcha.route_name'],
+                        ['ts' => microtime()] // This is used as permanent cache busting
+                    ),
+                    $container['captcha.image_width'],
+                    $container['captcha.image_height']
+                );
 
-            return $formTypes;
-        });
-        $container['twig.path'] = array_merge(
-            [__DIR__.'/Resources/views'],
-            $container['twig.path']
-        );
-        $container['twig.form.templates'] = array_merge(
-            ['captcha_block.html.twig'],
-            $container['twig.form.templates']
-        );
+                return $formTypes;
+            });
+        }
+
+        if (isset($container['twig'])) {
+            $container->extend('twig.loader.filesystem', function (FilesystemLoader $loader, Container $container) {
+                $path = __DIR__.'/Resources/views';
+                $loader->addPath($path);
+
+                return $loader;
+            });
+
+            $container['twig.form.templates'] = array_merge(
+                $container['twig.form.templates'],
+                ['captcha_block.html.twig']
+            );
+        }
     }
 
     /**
