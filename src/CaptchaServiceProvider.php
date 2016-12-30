@@ -52,19 +52,21 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
         };
 
         // Service extension
-        $container->extend('form.types', function (array $formTypes, Container $container) {
-            $formTypes[] = new CaptchaType(
-                $container['captcha'],
-                $container['url_generator']->generate(
-                    $container['captcha.route_name'],
-                    ['ts' => microtime()] // This is used as permanent cache busting
-                ),
-                $container['captcha.image_width'],
-                $container['captcha.image_height']
-            );
+        if (isset($container['form.factory'])) {
+            $container->extend('form.types', function (array $formTypes, Container $container) {
+                $formTypes[] = new CaptchaType(
+                    $container['captcha'],
+                    $container['url_generator']->generate(
+                        $container['captcha.route_name'],
+                        ['ts' => microtime()] // This is used as permanent cache busting
+                    ),
+                    $container['captcha.image_width'],
+                    $container['captcha.image_height']
+                );
 
-            return $formTypes;
-        });
+                return $formTypes;
+            });
+        }
         $container['twig.path'] = array_merge(
             [__DIR__.'/Resources/views'],
             $container['twig.path']
