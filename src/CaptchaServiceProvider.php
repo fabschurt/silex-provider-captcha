@@ -20,6 +20,7 @@ use Pimple\ServiceProviderInterface;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
+use Twig_Loader_Filesystem as FilesystemLoader;
 
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
@@ -67,14 +68,20 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
                 return $formTypes;
             });
         }
-        $container['twig.path'] = array_merge(
-            [__DIR__.'/Resources/views'],
-            $container['twig.path']
-        );
-        $container['twig.form.templates'] = array_merge(
-            ['captcha_block.html.twig'],
-            $container['twig.form.templates']
-        );
+
+        if (isset($container['twig'])) {
+            $container->extend('twig.loader.filesystem', function (FilesystemLoader $loader, Container $container) {
+                $path = __DIR__.'/Resources/views';
+                $loader->addPath($path);
+
+                return $loader;
+            });
+
+            $container['twig.form.templates'] = array_merge(
+                $container['twig.form.templates'],
+                ['captcha_block.html.twig']
+            );
+        }
     }
 
     /**
