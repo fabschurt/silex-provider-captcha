@@ -39,8 +39,7 @@ final class CaptchaBuilderFactoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->specifyConfig()->shallowClone();
-        $this->subject = new CaptchaBuilderFactory(
-            $this->prophesize(PhraseBuilder::class)->reveal()
-        );
+
+        $this->subject = new CaptchaBuilderFactory($this->prophesize(PhraseBuilder::class)->reveal());
     }
 }

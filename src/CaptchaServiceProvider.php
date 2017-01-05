@@ -32,7 +32,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
      */
     public function register(Container $container)
     {
-        // Parameters
         $container['captcha.url']           = '/captcha';
         $container['captcha.route_name']    = 'captcha';
         $container['captcha.storage_key']   = 'captcha.current';
@@ -40,7 +39,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
         $container['captcha.image_height']  = 32;
         $container['captcha.image_quality'] = 90;
 
-        // Services
         $container['captcha'] = function (Container $container) {
             return new Captcha(
                 new CaptchaBuilderFactory(new PhraseBuilder()),
@@ -52,7 +50,6 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
             );
         };
 
-        // Service extension
         if (isset($container['form.factory'])) {
             $container->extend('form.types', function (array $formTypes, Container $container) {
                 $formTypes[] = new CaptchaType(
@@ -70,7 +67,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
         }
 
         if (isset($container['twig'])) {
-            $container->extend('twig.loader.filesystem', function (FilesystemLoader $loader, Container $container) {
+            $container->extend('twig.loader.filesystem', function (FilesystemLoader $loader) {
                 $path = __DIR__.'/Resources/views';
                 $loader->addPath($path);
 
@@ -90,6 +87,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
+
         $controllers->get($app['captcha.url'], function (Application $app) {
             return new Response(
                 $app['captcha']->generate(),
