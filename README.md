@@ -58,9 +58,9 @@ use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use Silex\Application;
 use Silex\Provider;
 
-$app = new Application();
-$app->register(new Provider\SessionServiceProvider());
+$app             = new Application();
 $captchaProvider = new CaptchaServiceProvider();
+$app->register(new Provider\SessionServiceProvider());
 $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
 ```
@@ -73,14 +73,14 @@ use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
 use Silex\Application;
 use Silex\Provider;
 
-$app = new Application();
+$app             = new Application();
+$captchaProvider = new CaptchaServiceProvider();
 $app->register(new Provider\SessionServiceProvider());
 $app->register(new Provider\FormServiceProvider());
 $app->register(new Provider\ValidatorServiceProvider());
 $app->register(new Provider\LocaleServiceProvider());
 $app->register(new Provider\TranslationServiceProvider());
 $app->register(new Provider\TwigServiceProvider());
-$captchaProvider = new CaptchaServiceProvider();
 $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
 ```
