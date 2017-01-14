@@ -110,7 +110,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
             $form = $this->buildForm();
             $form->submit(['captcha' => uniqid()]);
             verify_not(
-                (new Crawler($this->buildFormHtml($form), $this->getDummyUrl())) // We must pass a dummy URL to the crawler constructor, otherwise form functionality can’t be used
+                (new Crawler($this->buildFormHtml($form), 'http://dev/null')) // We must pass a dummy URL to the crawler constructor, otherwise form functionality can’t be used
                     ->selectButton('Submit')
                     ->form()
                     ->getPhpValues()[$this->getTestFormName()]['captcha']
@@ -225,15 +225,5 @@ final class CaptchaServiceProviderTest extends WebTestCase
     private function getTestFormName()
     {
         return 'test_form';
-    }
-
-    /**
-     * Returns a fake (but well-formed) URL.
-     *
-     * @return string
-     */
-    private function getDummyUrl()
-    {
-        return 'http://dev/null';
     }
 }
