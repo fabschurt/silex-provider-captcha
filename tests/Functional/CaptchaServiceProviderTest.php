@@ -148,6 +148,7 @@ final class CaptchaServiceProviderTest extends WebTestCase
     {
         $app = new Application(['debug' => true]);
         unset($app['exception_handler']);
+
         $app->register(new Provider\SessionServiceProvider(), ['session.test' => true]);
         $app->register(new Provider\FormServiceProvider());
         $app->register(new Provider\ValidatorServiceProvider());
