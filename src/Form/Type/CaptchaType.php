@@ -46,17 +46,24 @@ final class CaptchaType extends AbstractType
     private $imageHeight;
 
     /**
+     * @var string
+     */
+    private $cacheBustingParamName;
+
+    /**
      * @param Captcha $captcha
      * @param string  $captchaUrl
-     * @param int     $imageWidth  (optional)
-     * @param int     $imageHeight (optional)
+     * @param int     $imageWidth            (optional)
+     * @param int     $imageHeight           (optional)
+     * @param string  $cacheBustingParamName (optional)
      */
-    public function __construct(CaptchaInterface $captcha, $captchaUrl, $imageWidth = 120, $imageHeight = 32)
+    public function __construct(CaptchaInterface $captcha, $captchaUrl, $imageWidth = 120, $imageHeight = 32, $cacheBustingParamName = 'ts')
     {
-        $this->captcha     = $captcha;
-        $this->captchaUrl  = $captchaUrl;
-        $this->imageWidth  = $imageWidth;
-        $this->imageHeight = $imageHeight;
+        $this->captcha               = $captcha;
+        $this->captchaUrl            = $captchaUrl;
+        $this->imageWidth            = $imageWidth;
+        $this->imageHeight           = $imageHeight;
+        $this->cacheBustingParamName = $cacheBustingParamName;
     }
 
     /**
@@ -64,10 +71,11 @@ final class CaptchaType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['value']        = null; // Make sure the input’s value is always empty (the user must type the captcha every time they send the form)
-        $view->vars['captcha_url']  = $this->captchaUrl;
-        $view->vars['image_width']  = $this->imageWidth;
-        $view->vars['image_height'] = $this->imageHeight;
+        $view->vars['value']                    = null; // Make sure the input’s value is always empty (the user must type the captcha every time they send the form)
+        $view->vars['captcha_url']              = $this->captchaUrl;
+        $view->vars['image_width']              = $this->imageWidth;
+        $view->vars['image_height']             = $this->imageHeight;
+        $view->vars['cache_busting_param_name'] = $this->cacheBustingParamName;
     }
 
     /**

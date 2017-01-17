@@ -32,14 +32,15 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
      */
     public function register(Container $container)
     {
-        $container['captcha.url']               = '/captcha';
-        $container['captcha.route_name']        = 'captcha';
-        $container['captcha.storage_key']       = 'captcha.current';
-        $container['captcha.image_width']       = 120;
-        $container['captcha.image_height']      = 32;
-        $container['captcha.image_quality']     = 90;
-        $container['captcha.width_param_name']  = 'w';
-        $container['captcha.height_param_name'] = 'h';
+        $container['captcha.url']                      = '/captcha';
+        $container['captcha.route_name']               = 'captcha';
+        $container['captcha.storage_key']              = 'captcha.current';
+        $container['captcha.image_width']              = 120;
+        $container['captcha.image_height']             = 32;
+        $container['captcha.image_quality']            = 90;
+        $container['captcha.width_param_name']         = 'w';
+        $container['captcha.height_param_name']        = 'h';
+        $container['captcha.cache_busting_param_name'] = 'ts';
 
         $container['captcha'] = function (Container $container) {
             return new Captcha(
@@ -58,10 +59,11 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
                     $container['captcha'],
                     $container['url_generator']->generate(
                         $container['captcha.route_name'],
-                        ['ts' => microtime()] // This is used as permanent cache busting
+                        [$container['captcha.cache_busting_param_name'] => microtime()] // This is used as permanent cache busting
                     ),
                     $container['captcha.image_width'],
-                    $container['captcha.image_height']
+                    $container['captcha.image_height'],
+                    $container['captcha.cache_busting_param_name']
                 );
 
                 return $formTypes;

@@ -172,17 +172,18 @@ for more information.
 
 Here goes a detailed table of the available parameters/services&nbsp;:
 
-| Key                         | Description                                                                                                           | Expected type                 | Default value                 |
-|-----------------------------|-----------------------------------------------------------------------------------------------------------------------|-------------------------------|-------------------------------|
-| `captcha`                   | The main captcha service that will generate and verify captcha phrases                                                | `Service\CaptchaInterface`    | Instance of `Service\Captcha` |
-| `captcha.url`               | The URL from which the captcha image is served                                                                        | `string` (valid URL required) | */captcha*                    |
-| `captcha.route_name`        | The Silex route name for the image-serving URL                                                                        | `string`                      | *captcha*                     |
-| `captcha.storage_key`       | The key under which the current captcha phrase will be stored in session                                              | `string`                      | *captcha.current*             |
-| `captcha.image_width`       | The captcha image’s default output width (actual width and `width` attribute of the form widget’s `<img>` element)    | `integer`                     | *120*                         |
-| `captcha.image_height`      | The captcha image’s default output height (actual height and `height` attribute of the form widget’s `<img>` element) | `integer`                     | *32*                          |
-| `captcha.image_quality`     | The captcha image’s compression level (`100` is great but heavier, `0` is crap but lighter)                           | `integer`                     | *90*                          |
-| `captcha.width_param_name`  | The name of the query string parameter used to customize the served image’s width                                     | `string`                      | *w*                           |
-| `captcha.height_param_name` | The name of the query string parameter used to customize the served image’s height                                    | `string`                      | *h*                           |
+| Key                                | Description                                                                                                           | Expected type                 | Default value                 |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------|-------------------------------|-------------------------------|
+| `captcha`                          | The main captcha service that will generate and verify captcha phrases                                                | `Service\CaptchaInterface`    | Instance of `Service\Captcha` |
+| `captcha.url`                      | The URL from which the captcha image is served                                                                        | `string` (valid URL required) | */captcha*                    |
+| `captcha.route_name`               | The Silex route name for the image-serving URL                                                                        | `string`                      | *captcha*                     |
+| `captcha.storage_key`              | The key under which the current captcha phrase will be stored in session                                              | `string`                      | *captcha.current*             |
+| `captcha.image_width`              | The captcha image’s default output width (actual width and `width` attribute of the form widget’s `<img>` element)    | `integer`                     | *120*                         |
+| `captcha.image_height`             | The captcha image’s default output height (actual height and `height` attribute of the form widget’s `<img>` element) | `integer`                     | *32*                          |
+| `captcha.image_quality`            | The captcha image’s compression level (`100` is great but heavier, `0` is crap but lighter)                           | `integer`                     | *90*                          |
+| `captcha.width_param_name`         | The name of the query string parameter used to customize the served image’s width                                     | `string`                      | *w*                           |
+| `captcha.height_param_name`        | The name of the query string parameter used to customize the served image’s height                                    | `string`                      | *h*                           |
+| `captcha.cache_busting_param_name` | The name of the query string parameter used to cache-bust the served image                                            | `string`                      | *ts*                          |
 
 ## License
 
