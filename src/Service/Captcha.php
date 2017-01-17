@@ -89,7 +89,8 @@ final class Captcha implements CaptchaInterface
      */
     public function verify($inputPhrase)
     {
-        if (is_null($storedPhrase = $this->storage->get($this->storageKey))) {
+        $storedPhrase = $this->storage->get($this->storageKey);
+        if ($storedPhrase === null) {
             return false;
         }
 

@@ -19,8 +19,8 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Twig_Loader_Filesystem as FilesystemLoader;
 
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
@@ -69,7 +69,7 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
         }
 
         if (isset($container['twig'])) {
-            $container->extend('twig.loader.filesystem', function (FilesystemLoader $loader) {
+            $container->extend('twig.loader.filesystem', function (\Twig_Loader_Filesystem $loader) {
                 $path = __DIR__.'/Resources/views';
                 $loader->addPath($path);
 

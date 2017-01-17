@@ -65,8 +65,8 @@ $app->register($captchaProvider);
 $app->mount('', $captchaProvider);
 ```
 
-As stated earlier, if you want to use the provider’s form functionality, you
-will also need to register some core Silex providers&nbsp;:
+As stated earlier, if you want to use the provider’s form integration, you will
+also need to register some core Silex providers&nbsp;:
 
 ```php
 use FabSchurt\Silex\Provider\Captcha\CaptchaServiceProvider;
@@ -86,7 +86,7 @@ $app->mount('', $captchaProvider);
 ```
 
 **Important&nbsp;:** you **MUST** register the captcha provider after all the
-other depended-on providers, otherwise the form functionality won’t work.
+other depended-on providers, otherwise the form integration won’t work.
 
 ## Usage
 
@@ -120,8 +120,9 @@ So, for example, in a Twig template&nbsp;:
 browsers might keep the requested image in cache and display it again even after
 page refresh.
 
-When the image is requested, the current phrase is stored in session for later
-use/comparison. The phrase changes every time the image is requested.
+When the image is requested, a random phrase will be generated and stored in
+session for later use/comparison. The phrase is generated again every time the
+image is requested.
 
 You can also add query parameters to the generated URL to override the default
 output width and height of the generated image&nbsp;:
