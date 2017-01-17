@@ -21,10 +21,12 @@ interface CaptchaInterface
      *
      * @param string $phrase (optional) A specific phrase to generate as captcha (if left null, a random phrase should
      *                       be generated)
+     * @param int    $width  (optional) The width of the generated image
+     * @param int    $height (optional) The height of the generated image
      *
      * @return string The JPEG bytestream
      */
-    public function generate($phrase = null);
+    public function generate($phrase = null, $width = null, $height = null);
 
     /**
      * Checks if `$inputPhrase` matches the current captcha phrase (concrete

@@ -32,12 +32,14 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
      */
     public function register(Container $container)
     {
-        $container['captcha.url']           = '/captcha';
-        $container['captcha.route_name']    = 'captcha';
-        $container['captcha.storage_key']   = 'captcha.current';
-        $container['captcha.image_width']   = 120;
-        $container['captcha.image_height']  = 32;
-        $container['captcha.image_quality'] = 90;
+        $container['captcha.url']               = '/captcha';
+        $container['captcha.route_name']        = 'captcha';
+        $container['captcha.storage_key']       = 'captcha.current';
+        $container['captcha.image_width']       = 120;
+        $container['captcha.image_height']      = 32;
+        $container['captcha.image_quality']     = 90;
+        $container['captcha.width_param_name']  = 'w';
+        $container['captcha.height_param_name'] = 'h';
 
         $container['captcha'] = function (Container $container) {
             return new Captcha(
@@ -88,9 +90,13 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
     {
         $controllers = $app['controllers_factory'];
 
-        $controllers->get($app['captcha.url'], function (Application $app) {
+        $controllers->get($app['captcha.url'], function (Request $req, Application $app) {
             return new Response(
-                $app['captcha']->generate(),
+                $app['captcha']->generate(
+                    null,
+                    $req->query->get($app['captcha.width_param_name']),
+                    $req->query->get($app['captcha.height_param_name'])
+                ),
                 Response::HTTP_OK,
                 ['Content-Type' => 'image/jpeg']
             );

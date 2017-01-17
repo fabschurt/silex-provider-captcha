@@ -36,12 +36,12 @@ final class Captcha implements CaptchaInterface
     /**
      * @var int
      */
-    private $imageWidth;
+    private $defaultImageWidth;
 
     /**
      * @var int
      */
-    private $imageHeight;
+    private $defaultImageHeight;
 
     /**
      * @var int
@@ -52,33 +52,33 @@ final class Captcha implements CaptchaInterface
      * @param CaptchaBuilderFactoryInterface $builderFactory
      * @param SessionInterface               $storage
      * @param string                         $storageKey
-     * @param int                            $imageWidth     (optional) Default: 120
-     * @param int                            $imageHeight    (optional) Default: 32
-     * @param int                            $imageQuality   (optional) Default: 90
+     * @param int                            $defaultImageWidth  (optional)
+     * @param int                            $defaultImageHeight (optional)
+     * @param int                            $imageQuality       (optional)
      */
     public function __construct(
         CaptchaBuilderFactoryInterface $builderFactory,
         SessionInterface $storage,
         $storageKey,
-        $imageWidth = 120,
-        $imageHeight = 32,
+        $defaultImageWidth = 120,
+        $defaultImageHeight = 32,
         $imageQuality = 90
     ) {
-        $this->builderFactory = $builderFactory;
-        $this->storage        = $storage;
-        $this->storageKey     = $storageKey;
-        $this->imageWidth     = $imageWidth;
-        $this->imageHeight    = $imageHeight;
-        $this->imageQuality   = $imageQuality;
+        $this->builderFactory     = $builderFactory;
+        $this->storage            = $storage;
+        $this->storageKey         = $storageKey;
+        $this->defaultImageWidth  = $defaultImageWidth;
+        $this->defaultImageHeight = $defaultImageHeight;
+        $this->imageQuality       = $imageQuality;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function generate($phrase = null)
+    public function generate($phrase = null, $width = null, $height = null)
     {
         $builder = $this->builderFactory->createBuilder($phrase);
-        $builder->build($this->imageWidth, $this->imageHeight, null, null);
+        $builder->build($width ?: $this->defaultImageWidth, $height ?: $this->defaultImageHeight, null, null);
         $this->storage->set($this->storageKey, $builder->getPhrase());
 
         return $builder->get($this->imageQuality);

@@ -53,6 +53,17 @@ final class CaptchaServiceProviderTest extends WebTestCase
                 (new \finfo(\FILEINFO_MIME_TYPE))->buffer($client->getResponse()->getContent())
             )->same('image/jpeg');
         });
+
+        $this->specify('size of served JPEG image can be customized with request parameters', function () {
+            $width  = 160;
+            $height = 90;
+            $client = $this->createClient();
+            $client->request(Request::METHOD_GET, "/captcha?w={$width}&h={$height}");
+            $imgSize = getimagesizefromstring($client->getResponse()->getContent());
+            verify($client->getResponse()->isOk())->true();
+            verify($imgSize[0])->same($width);
+            verify($imgSize[1])->same($height);
+        });
     }
 
     public function testCaptchaValidation()
