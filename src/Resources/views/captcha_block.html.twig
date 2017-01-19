@@ -11,7 +11,7 @@
     <div class="captcha-wrapper">
         <button type="button"
                 class="captcha-refresh-btn"
-                title="{{ 'Load a new image'|trans({}, 'captcha') }}"
+                title="{{ 'Load a new image'|trans }}"
                 onclick="var img = document.querySelector('img.captcha-img'); img.setAttribute('src', img.getAttribute('src').replace(/(\?|&amp;){{ cache_busting_param_name }}=\d+/, '$1{{ cache_busting_param_name }}=' + Date.now()));">
             <span class="captcha-refresh-btn-icon"></span>
         </button>

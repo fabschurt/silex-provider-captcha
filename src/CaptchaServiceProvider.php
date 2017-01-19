@@ -21,6 +21,7 @@ use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @author Fabien Schurter <fabien@fabschurt.com>
@@ -82,6 +83,24 @@ final class CaptchaServiceProvider implements ServiceProviderInterface, Controll
                 $container['twig.form.templates'],
                 ['captcha_block.html.twig']
             );
+        }
+
+        if (isset($container['locale']) && isset($container['translator'])) {
+            $container->extend('translator', function (Translator $translator, Container $container) {
+                $locale = $container['locale'];
+                foreach ([
+                    'messages',
+                    'validators',
+                ] as $domain) {
+                    $path = __DIR__."/Resources/translations/{$domain}.{$locale}.xlf";
+                    if (!is_file($path)) {
+                        continue;
+                    }
+                    $translator->addResource('xliff', $path, $locale, $domain);
+                }
+
+                return $translator;
+            });
         }
     }
 

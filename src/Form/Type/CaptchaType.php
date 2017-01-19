@@ -89,7 +89,7 @@ final class CaptchaType extends AbstractType
                 new Constraints\Callback(function ($value, ExecutionContextInterface $context) {
                     if (!$this->captcha->verify($value)) {
                         $context
-                            ->buildViolation('Invalid captcha value.')
+                            ->buildViolation('Incorrect captcha value.')
                             ->atPath($this->getBlockPrefix())
                             ->addViolation()
                         ;
