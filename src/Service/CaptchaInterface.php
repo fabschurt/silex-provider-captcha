@@ -19,10 +19,10 @@ interface CaptchaInterface
     /**
      * Generates a captcha phrase and returns it as a JPEG stream.
      *
-     * @param string $phrase (optional) A specific phrase to generate as captcha (if left null, a random phrase should
-     *                       be generated instead)
-     * @param int    $width  (optional) The width of the generated image
-     * @param int    $height (optional) The height of the generated image
+     * @param string $phrase A specific phrase to generate as captcha; if left null, a random phrase should
+     *                       be generated instead (optional)
+     * @param int    $width  The width of the generated image (optional)
+     * @param int    $height The height of the generated image (optional)
      *
      * @return string The JPEG bytestream
      */

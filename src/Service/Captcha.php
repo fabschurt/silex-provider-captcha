@@ -52,9 +52,9 @@ final class Captcha implements CaptchaInterface
      * @param CaptchaBuilderFactoryInterface $builderFactory
      * @param SessionInterface               $storage
      * @param string                         $storageKey
-     * @param int                            $defaultImageWidth  (optional)
-     * @param int                            $defaultImageHeight (optional)
-     * @param int                            $imageQuality       (optional)
+     * @param int                            $defaultImageWidth  (optional, defaults to *120*)
+     * @param int                            $defaultImageHeight (optional, defaults to *32*)
+     * @param int                            $imageQuality       (optional, defaults to *90*)
      */
     public function __construct(
         CaptchaBuilderFactoryInterface $builderFactory,

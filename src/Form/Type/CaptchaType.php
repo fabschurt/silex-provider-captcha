@@ -53,9 +53,9 @@ final class CaptchaType extends AbstractType
     /**
      * @param Captcha $captcha
      * @param string  $captchaUrl
-     * @param int     $imageWidth            (optional)
-     * @param int     $imageHeight           (optional)
-     * @param string  $cacheBustingParamName (optional)
+     * @param int     $imageWidth            (optional, defaults to *120*)
+     * @param int     $imageHeight           (optional, defaults to *32*)
+     * @param string  $cacheBustingParamName (optional, defaults to *ts*)
      */
     public function __construct(CaptchaInterface $captcha, $captchaUrl, $imageWidth = 120, $imageHeight = 32, $cacheBustingParamName = 'ts')
     {

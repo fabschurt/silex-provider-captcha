@@ -202,8 +202,8 @@ final class CaptchaServiceProviderTest extends WebTestCase
     /**
      * Returns an HTML form containing only the captcha field.
      *
-     * @param FormInterface $form (optional) A pre-defined form object to be rendered (if left null, a fresh form will
-     *                            be built internally)
+     * @param FormInterface $form A pre-defined form object to be rendered; if left null, a fresh form will be built
+     *                            internally (optional)
      *
      * @return string
      */

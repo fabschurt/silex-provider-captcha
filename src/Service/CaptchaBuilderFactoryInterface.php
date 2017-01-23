@@ -21,8 +21,8 @@ interface CaptchaBuilderFactoryInterface
     /**
      * Creates a captcha builder.
      *
-     * @param string $phrase (optional) A specific phrase to generate as captcha (if left null, a random phrase should
-     *                       be generated)
+     * @param string $phrase A specific phrase to generate as captcha; if left null, a random phrase should be generated
+     *                       (optional)
      *
      * @return CaptchaBuilderInterface
      */
