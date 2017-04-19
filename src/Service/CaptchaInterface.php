@@ -38,4 +38,11 @@ interface CaptchaInterface
      * @return bool
      */
     public function verify($inputPhrase);
+
+    /**
+     * Destroy current captcha phrase.
+     *
+     * @return void
+     */
+    public function destroy();
 }

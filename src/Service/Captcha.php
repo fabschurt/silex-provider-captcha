@@ -96,4 +96,12 @@ final class Captcha implements CaptchaInterface
 
         return $inputPhrase === $storedPhrase;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function destroy()
+    {
+        $this->storage->set($this->storageKey, null);
+    }
 }
