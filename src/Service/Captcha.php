@@ -94,7 +94,12 @@ final class Captcha implements CaptchaInterface
             return false;
         }
 
-        return $inputPhrase === $storedPhrase;
+        if ($inputPhrase === $storedPhrase) {
+            $this->destroy();
+            return true;
+        }
+
+        return false;
     }
 
     /**

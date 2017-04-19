@@ -83,6 +83,14 @@ final class CaptchaServiceProviderTest extends WebTestCase
             verify($this->app['captcha']->verify('Fear denies faith'))->false();
         });
 
+        $this->specify('validation should fail on second check of valid phrase', function () {
+            $phrase = 'You shall not replay';
+            $this->app['captcha']->generate($phrase);
+            verify($this->app['session']->get($this->app['captcha.storage_key']))->same($phrase);
+            verify($this->app['captcha']->verify($phrase))->true();
+            verify($this->app['captcha']->verify($phrase))->false();
+        });
+
         $this->specify('form validity should depend on captcha field validity', function ($phrase, $expectedValidity) {
             $this->app['captcha']->generate('Knowledge is power, guard it well');
             $form = $this->buildForm();
