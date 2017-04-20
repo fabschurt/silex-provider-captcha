@@ -40,7 +40,7 @@ interface CaptchaInterface
     public function verify($inputPhrase);
 
     /**
-     * Destroy current captcha phrase.
+     * Destroys current captcha phrase.
      *
      * @return void
      */

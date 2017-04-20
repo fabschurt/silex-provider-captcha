@@ -96,6 +96,7 @@ final class Captcha implements CaptchaInterface
 
         if ($inputPhrase === $storedPhrase) {
             $this->destroy();
+
             return true;
         }
 
